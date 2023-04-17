@@ -25,10 +25,10 @@ public class Recensione {
     private Float rating;
 
     @Column(name = "commento")
-    private Blob commento;
+    private String commento;
 
     @Column(name = "destinatario")
-    private Utente destinatario;
+    private Long destinatario;
 
     @ManyToOne
     @JoinColumn(name = "autore", referencedColumnName = "id")
