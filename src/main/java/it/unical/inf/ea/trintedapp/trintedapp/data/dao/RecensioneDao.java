@@ -9,10 +9,9 @@ import java.util.List;
 
 public interface RecensioneDao extends JpaRepository<Long, Recensione> {
 
-    @Query("select r.id" +
-            "from Recensione r" +
-            "where r.destinatario = :destinatario")
-    List<Recensione> findByDestinatario(Long destinatario);
 
-    
+    List<Recensione> findAllByDestinatario(Long destinatario);
+
+
+
 }
