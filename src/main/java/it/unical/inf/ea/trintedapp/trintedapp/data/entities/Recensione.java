@@ -10,8 +10,6 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Blob;
-
 @Entity
 @Table(name = "recensione")
 @Data

@@ -47,6 +47,9 @@ public class Utente {
     @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Articolo> articoli;
 
+    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
+    private List<Articolo> preferiti;
+
     @Embedded
     @AttributeOverrides({
         @AttributeOverride(name = "username", column = @Column(name = "username")),
