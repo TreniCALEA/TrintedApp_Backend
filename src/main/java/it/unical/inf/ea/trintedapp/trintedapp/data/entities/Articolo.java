@@ -31,4 +31,7 @@ public class Articolo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "utente")
     private Utente utente;
+
+    @OneToOne(mappedBy = "articolo")
+    private Ordine ordineAssociato;
 }
