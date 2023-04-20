@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @Data
 @NoArgsConstructor
-public class Indirizzo {
-    private String via, numeroCivico, citta;
+public class Credenziali {
+    private String username;
+    private String password;
+    private String email;
 }

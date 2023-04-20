@@ -2,6 +2,7 @@ package it.unical.inf.ea.trintedapp.trintedapp.data.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -30,8 +31,8 @@ public class Recensione {
     @Column(name = "destinatario")
     private Long destinatario;
 
-    @ManyToOne
-    @JoinColumn(name = "autore", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "autore")
     private Utente autore;
 
 

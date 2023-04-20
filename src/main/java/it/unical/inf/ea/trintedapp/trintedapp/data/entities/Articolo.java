@@ -28,7 +28,7 @@ public class Articolo {
     @Column(name = "immagini")
     private ArrayList<Byte[]> immagini;
 
-    @ManyToOne
-    @JoinColumn(name = "utente", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "utente")
     private Utente utente;
 }

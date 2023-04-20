@@ -41,7 +41,21 @@ public class Utente {
     })
     private Indirizzo indirizzo;
 
-    @OneToMany(mappedBy = "recensione", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Recensione> recensioni;
+    @OneToMany(mappedBy = "autore", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Recensione> recensioniRicevute;
+
+    @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Articolo> articoli;
+
+    @Embedded
+    @AttributeOverrides({
+        @AttributeOverride(name = "username", column = @Column(name = "username")),
+        @AttributeOverride(name = "password", column = @Column(name = "password")),
+        @AttributeOverride(name = "email", column = @Column(name = "email"))
+    })
+    private Credenziali credenziali;
+
+    @Column(name = "isAdmin")
+    private Boolean isAdmin;
 
 }
