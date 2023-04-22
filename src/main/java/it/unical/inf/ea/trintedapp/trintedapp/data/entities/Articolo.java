@@ -11,8 +11,9 @@ import java.util.ArrayList;
 @Data
 @NoArgsConstructor
 public class Articolo {
+    
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "titolo")

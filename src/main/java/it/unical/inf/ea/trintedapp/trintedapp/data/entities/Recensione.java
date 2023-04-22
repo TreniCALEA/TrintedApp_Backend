@@ -27,7 +27,7 @@ public class Recensione {
     private String commento;
 
     @Column(name = "destinatario")
-    private Long destinatario;
+    private Utente destinatario;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "autore")

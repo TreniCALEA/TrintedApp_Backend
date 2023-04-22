@@ -1,6 +1,8 @@
 package it.unical.inf.ea.trintedapp.trintedapp.data.entities;
 
 import java.util.List;
+import java.util.Set;
+
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CascadeType;
@@ -11,6 +13,9 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
@@ -35,9 +40,9 @@ public class Utente {
 
     @Embedded
     @AttributeOverrides({
-        @AttributeOverride(name = "via", column = @Column(name = "via_utente")),
-        @AttributeOverride(name = "numeroCivico", column = @Column(name = "numeroCivico_utente")),
-        @AttributeOverride(name = "citta", column = @Column(name = "citta_user"))
+            @AttributeOverride(name = "via", column = @Column(name = "via_utente")),
+            @AttributeOverride(name = "numero_civico", column = @Column(name = "numeroCivico_utente")),
+            @AttributeOverride(name = "citta", column = @Column(name = "citta_utente"))
     })
     private Indirizzo indirizzo;
 
@@ -47,18 +52,23 @@ public class Utente {
     @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Articolo> articoli;
 
-    @OneToMany(mappedBy = "id", fetch = FetchType.LAZY)
-    private List<Articolo> preferiti;
+    @Column(name = "preferiti")
+    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinTable(name = "preferiti_utente", joinColumns = @JoinColumn(name = "utente_id"), inverseJoinColumns = @JoinColumn(name = "articolo_id"))
+    private Set<Articolo> preferiti;
 
     @Embedded
     @AttributeOverrides({
-        @AttributeOverride(name = "username", column = @Column(name = "username")),
-        @AttributeOverride(name = "password", column = @Column(name = "password")),
-        @AttributeOverride(name = "email", column = @Column(name = "email"))
+            @AttributeOverride(name = "username", column = @Column(name = "username")),
+            @AttributeOverride(name = "password", column = @Column(name = "password")),
+            @AttributeOverride(name = "email", column = @Column(name = "email"))
     })
     private Credenziali credenziali;
 
     @Column(name = "isAdmin")
     private Boolean isAdmin;
+
+    @OneToMany(mappedBy = "acquirente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    List<Ordine> ordiniUtente;
 
 }
