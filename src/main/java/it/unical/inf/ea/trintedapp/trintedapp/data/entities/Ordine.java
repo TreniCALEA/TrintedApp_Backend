@@ -34,8 +34,8 @@ public class Ordine {
     @Column(name = "prezzo_finale")
     private Long prezzoFinale;
 
-    private Recensione recensioneAcquisto;
-
-    private Recensione recensioneVenditore;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "recensione_ordine")
+    private Recensione recensioneOrdine;
 
 }
