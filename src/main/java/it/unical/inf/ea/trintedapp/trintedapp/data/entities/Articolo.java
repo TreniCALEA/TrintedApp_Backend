@@ -25,9 +25,9 @@ public class Articolo {
     @Column(name = "prezzo")
     private Double prezzo;
 
-    @ElementCollection
+    @Lob
     @Column(name = "immagini")
-    private ArrayList<Byte[]> immagini;
+    private ArrayList<String> immagini;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "utente")

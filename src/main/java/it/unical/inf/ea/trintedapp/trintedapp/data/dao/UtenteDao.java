@@ -6,8 +6,5 @@ import org.springframework.stereotype.Repository;
 import it.unical.inf.ea.trintedapp.trintedapp.data.entities.Utente;
 
 @Repository
-public interface UtenteDao extends JpaRepository<Long, Utente> {
-
-
-
+public interface UtenteDao extends JpaRepository<Utente, Long> {
 }

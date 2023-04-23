@@ -9,11 +9,6 @@ import it.unical.inf.ea.trintedapp.trintedapp.data.entities.Utente;
 import java.util.List;
 
 @Repository
-public interface RecensioneDao extends JpaRepository<Long, Recensione> {
-
-
+public interface RecensioneDao extends JpaRepository<Recensione, Long> {
     List<Recensione> findAllByDestinatario(Utente destinatario);
-
-
-
 }
