@@ -37,5 +37,4 @@ public class Ordine {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recensione_ordine")
     private Recensione recensioneOrdine;
-
 }
