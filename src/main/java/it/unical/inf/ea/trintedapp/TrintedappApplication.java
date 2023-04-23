@@ -1,4 +1,4 @@
-package it.unical.inf.ea.trintedapp.trintedapp;
+package it.unical.inf.ea.trintedapp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

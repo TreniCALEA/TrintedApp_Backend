@@ -1,4 +1,4 @@
-package it.unical.inf.ea.trintedapp.trintedapp.data.entities;
+package it.unical.inf.ea.trintedapp.data.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;

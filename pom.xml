@@ -6,13 +6,13 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.0.5</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
-	<groupId>it.unical.inf.ea.trintedapp</groupId>
+	<groupId>it.unical.inf.ea</groupId>
 	<artifactId>trintedapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>trintedapp</name>
-	<description>Demo project for Spring Boot</description>
+	<description>TrintedApp's SpringBoot backend server</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>

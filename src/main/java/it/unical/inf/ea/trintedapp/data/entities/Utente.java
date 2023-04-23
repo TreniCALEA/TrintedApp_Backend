@@ -1,4 +1,4 @@
-package it.unical.inf.ea.trintedapp.trintedapp.data.entities;
+package it.unical.inf.ea.trintedapp.data.entities;
 
 import java.util.List;
 import java.util.Set;
