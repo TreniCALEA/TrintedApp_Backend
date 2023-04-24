@@ -11,4 +11,8 @@ import java.util.List;
 @Repository
 public interface RecensioneDao extends JpaRepository<Recensione, Long> {
     List<Recensione> findAllByDestinatario(Utente destinatario);
+
+    List<Recensione> findAllByAutore(Utente autore);
+
+    List<Recensione> findAllByRating(Float rating);
 }

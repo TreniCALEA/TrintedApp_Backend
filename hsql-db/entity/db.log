@@ -1,4 +1,4 @@
-/*C3*/SET SCHEMA PUBLIC
+/*C12*/SET SCHEMA PUBLIC
 drop table if exists articolo cascade 
 drop table if exists ordine cascade 
 drop table if exists preferiti_utente cascade 
