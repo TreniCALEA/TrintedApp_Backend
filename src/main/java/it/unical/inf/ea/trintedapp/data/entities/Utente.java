@@ -69,6 +69,12 @@ public class Utente {
     private Boolean isAdmin;
 
     @OneToMany(mappedBy = "acquirente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    List<Ordine> ordiniUtente;
+    private List<Ordine> ordiniUtente;
+
+    @Column(name = "saldo")
+    private Float saldo;
+
+    @Column(name = "rating_genrale")
+    private Float ratingGenerale;
 
 }
