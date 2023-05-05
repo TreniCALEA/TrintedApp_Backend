@@ -2,15 +2,15 @@ package it.unical.inf.ea.trintedapp.dto;
 
 import java.time.LocalDate;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 public class OrdineDto {
     
     private Long id;
 
     @NotNull
+    @PastOrPresent
     private LocalDate dataAcquisto;
 
 }

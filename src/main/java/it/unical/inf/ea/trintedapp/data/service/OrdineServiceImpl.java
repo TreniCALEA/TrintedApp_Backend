@@ -32,12 +32,6 @@ public class OrdineServiceImpl implements OrdineService{
     }
 
     @Override
-    public Collection<Ordine> findAll(Specification<Ordine> specification) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
-    }
-
-    @Override
     public OrdineDto getById(Long id) {
         return modelMapper.map(
             ordineDao.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste ordine con id: [%s]", id))),
