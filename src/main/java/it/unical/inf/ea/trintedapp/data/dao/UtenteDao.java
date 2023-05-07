@@ -3,6 +3,8 @@ package it.unical.inf.ea.trintedapp.data.dao;
 import java.util.List;
 import java.util.Optional;
 
+import org.springdoc.core.converters.models.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -16,6 +18,8 @@ public interface UtenteDao extends JpaRepository<Utente, Long>, JpaSpecification
 
     Optional<Utente> findByCredenzialiUsername(String username);
 
-    List<Utente> findByIsAdmin(Boolean isAdmin);
+    List<Utente> findAllByIsAdmin(Boolean isAdmin);
+
+    Page<Utente> findAllByNomeLike(String nome, Pageable pageable);
 
 }

@@ -2,6 +2,7 @@ package it.unical.inf.ea.trintedapp.data.service;
 
 import java.util.Collection;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
@@ -20,5 +21,9 @@ public interface UtenteService {
     Collection<UtenteDto> findAll();
 
     void delete(Long id);
+
+    Page<UtenteDto> getAllPaged(int page);
+
+    Page<UtenteDto> getAllByNomeLike(String nome, int page);
 
 }
