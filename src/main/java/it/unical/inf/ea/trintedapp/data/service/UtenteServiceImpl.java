@@ -24,7 +24,7 @@ public class UtenteServiceImpl implements UtenteService {
 
     private final UtenteDao utenteDao;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Override
     public void save(Utente utente) {

@@ -30,7 +30,7 @@ public class UtenteController {
         return ResponseEntity.ok(utenteService.save(utente));
     }
 
-    @GetMapping("/users")
+    @GetMapping("/allUsers")
     public ResponseEntity<Collection<UtenteDto>> all() {
         return ResponseEntity.ok(utenteService.findAll());
     }
@@ -47,7 +47,7 @@ public class UtenteController {
         return HttpStatus.OK;
     }
 
-    @GetMapping("/users/{page}")
+    @GetMapping("/users/all/{page}")
     public ResponseEntity<Page<UtenteDto>> getAllPaged(@PathVariable("page") int page) {
         return ResponseEntity.ok(utenteService.getAllPaged(page));
     }

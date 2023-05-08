@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Indirizzo {
     private String via;
-    private String numeroCivico;
+    private Integer numeroCivico;
     private String citta;
 }
