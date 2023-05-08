@@ -20,8 +20,9 @@ public class RecensioneServiceImpl implements RecensioneService{
     }
 
     @Override
-    public Collection<Recensione> findAll(Specification<Recensione> rspec) {
-        return recensioneDao.findAll(rspec);
+    public Collection<Recensione> findAll(Long id) {
+        Specification<Recensione> sp = recensioneDao.recensioneDestinatario(id);
+        return recensioneDao.findAll(sp);
     }
 
     @Override

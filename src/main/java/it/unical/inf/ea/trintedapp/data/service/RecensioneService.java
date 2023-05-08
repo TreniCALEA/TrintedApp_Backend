@@ -9,7 +9,7 @@ public interface RecensioneService {
 
     void saveOrUpdate(Recensione recensione);
 
-    Collection<Recensione> findAll(Specification<Recensione> rspec);
+    Collection<Recensione> findAll(Long id);
 
     void delete(Long id);
 }

@@ -33,5 +33,5 @@ build/
 .vscode/
 .mvn/
 
-### hsql-db ###
-hsql-db/
+### application.properties ###
+application.properties

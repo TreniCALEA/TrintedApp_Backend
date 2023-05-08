@@ -30,7 +30,7 @@ public class UtenteController {
         return ResponseEntity.ok(utenteService.save(utente));
     }
 
-    @GetMapping("/allUsers")
+    @GetMapping("/users")
     public ResponseEntity<Collection<UtenteDto>> all() {
         return ResponseEntity.ok(utenteService.findAll());
     }
