@@ -2,6 +2,7 @@ package it.unical.inf.ea.trintedapp.controller;
 
 import java.util.Collection;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,6 +45,17 @@ public class UtenteController {
     public HttpStatus delete(@PathVariable("idUser") Long id) {
         utenteService.delete(id);
         return HttpStatus.OK;
+    }
+
+    @GetMapping("/users/{page}")
+    public ResponseEntity<Page<UtenteDto>> getAllPaged(@PathVariable("page") int page) {
+        return ResponseEntity.ok(utenteService.getAllPaged(page));
+    }
+
+    @GetMapping("/users/{name}/{page}")
+    public ResponseEntity<Page<UtenteDto>> getAllByNameLikePaged(@PathVariable("name") String n,
+            @PathVariable("page") int page) {
+        return ResponseEntity.ok(utenteService.getAllByNomeLike(n, page));
     }
 
 }
