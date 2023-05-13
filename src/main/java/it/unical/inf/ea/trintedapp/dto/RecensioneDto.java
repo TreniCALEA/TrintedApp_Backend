@@ -10,11 +10,12 @@ import lombok.ToString;
 @ToString
 public class RecensioneDto {
 
+    @NotNull
     private Long id;
 
+    @NotNull
     private Float rating;
 
-    @NotNull
     private String commento;
 
 }

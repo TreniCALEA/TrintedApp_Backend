@@ -3,15 +3,14 @@ package it.unical.inf.ea.trintedapp.controller;
 import it.unical.inf.ea.trintedapp.data.entities.Recensione;
 import it.unical.inf.ea.trintedapp.data.service.RecensioneService;
 import it.unical.inf.ea.trintedapp.dto.RecensioneDto;
-import it.unical.inf.ea.trintedapp.dto.UtenteDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-
+import java.util.List;
 
 @RestController
 @RequestMapping("/review-api/")
@@ -21,8 +20,14 @@ public class RecensioneController {
 
     private final RecensioneService recensioneService;
 
+    @PostMapping("/review")
+    public HttpStatus add(@RequestBody @Valid RecensioneDto review) {
+        recensioneService.save(review);
+        return HttpStatus.OK;
+    }
+
     @GetMapping("/review/{reviewId}")
-    public ResponseEntity<Collection<Recensione>> findAll(@PathVariable("reviewId") Long id){
+    public ResponseEntity<List<Recensione>> findAll(@PathVariable("reviewId") Long id){
         return ResponseEntity.ok(recensioneService.findAll(id));
     }
 
@@ -32,10 +37,9 @@ public class RecensioneController {
         return HttpStatus.OK;
     }
 
-    @PostMapping("/review")
-    public HttpStatus add(@RequestBody @Valid RecensioneDto recensioneDto) {
-        recensioneService.save(recensioneDto);
-        return HttpStatus.OK;
+    @GetMapping("/review/all/{review}")
+    public ResponseEntity<Page<RecensioneDto>> getAllPaged(@PathVariable("review") int review) {
+        return ResponseEntity.ok(recensioneService.getAllPaged(review));
     }
 
 }
