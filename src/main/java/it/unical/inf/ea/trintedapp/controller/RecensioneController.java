@@ -2,6 +2,7 @@ package it.unical.inf.ea.trintedapp.controller;
 
 import it.unical.inf.ea.trintedapp.data.entities.Recensione;
 import it.unical.inf.ea.trintedapp.data.service.RecensioneService;
+import it.unical.inf.ea.trintedapp.dto.RecensioneDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,8 @@ public class RecensioneController {
     }
 
     @PostMapping("/review")
-    public HttpStatus add(@RequestBody @Valid Recensione recensione) {
-        recensioneService.saveOrUpdate(recensione);
+    public HttpStatus add(@RequestBody @Valid RecensioneDto recensioneDto) {
+        recensioneService.save(recensioneDto);
         return HttpStatus.OK;
     }
 

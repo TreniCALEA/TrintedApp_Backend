@@ -66,7 +66,7 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public Page<UtenteDto> getAllPaged(int page) {
-        Page<Utente> utenti = utenteDao.findAll(PageRequest.of(0, SIZE_FOR_PAGE));
+        Page<Utente> utenti = utenteDao.findAll(PageRequest.of(page, SIZE_FOR_PAGE));
         List<UtenteDto> listUtenti = utenti.stream().map(u -> modelMapper.map(u, UtenteDto.class))
                 .collect(Collectors.toList());
         return new PageImpl<>(listUtenti);

@@ -59,7 +59,7 @@ public class Utente {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "username", column = @Column(name = "username")),
+            @AttributeOverride(name = "username", column = @Column(name = "username", unique = true)),
             @AttributeOverride(name = "password", column = @Column(name = "password")),
             @AttributeOverride(name = "email", column = @Column(name = "email"))
     })
