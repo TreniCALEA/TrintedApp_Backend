@@ -3,7 +3,6 @@ package it.unical.inf.ea.trintedapp.data.service;
 import it.unical.inf.ea.trintedapp.data.dao.ArticoloDao;
 import it.unical.inf.ea.trintedapp.data.entities.Articolo;
 import it.unical.inf.ea.trintedapp.dto.ArticoloDto;
-import it.unical.inf.ea.trintedapp.dto.UtenteDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
