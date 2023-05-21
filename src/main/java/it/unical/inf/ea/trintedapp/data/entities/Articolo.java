@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 
+import it.unical.inf.ea.trintedapp.dto.Categoria;
+import it.unical.inf.ea.trintedapp.dto.Condizioni;
+
 @Entity
 @Table(name = "articolo")
 @Data
@@ -35,4 +38,12 @@ public class Articolo {
 
     @OneToOne(mappedBy = "articolo")
     private Ordine ordineAssociato;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "categoria")
+    private Categoria categoria;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "condizioni")
+    private Condizioni condizioni;
 }

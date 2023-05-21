@@ -27,4 +27,9 @@ public class ArticoloDto {
     private ArrayList<String> immagini;
 
     private Utente utente;
+
+    private String categoria;
+
+    @NotNull
+    private String condizioni;
 }
