@@ -20,6 +20,6 @@ public interface UtenteDao extends JpaRepository<Utente, Long>, JpaSpecification
 
     List<Utente> findAllByIsAdmin(Boolean isAdmin);
 
-    Page<Utente> findAllByNomeLike(String nome, Pageable pageable);
+    Page<Utente> findAllByCredenzialiUsernameLike(String credenzialiUsername, Pageable pageable);
 
 }

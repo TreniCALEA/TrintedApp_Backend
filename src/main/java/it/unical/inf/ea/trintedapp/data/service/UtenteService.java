@@ -25,6 +25,6 @@ public interface UtenteService {
 
     Page<UtenteBasicDto> getAllPaged(int page);
 
-    Page<UtenteBasicDto> getAllByNomeLike(String nome, int page);
+    Page<UtenteBasicDto> getAllByUsernameLike(String nome, int page);
 
 }

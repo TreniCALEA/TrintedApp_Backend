@@ -53,10 +53,10 @@ public class UtenteController {
         return ResponseEntity.ok(utenteService.getAllPaged(page));
     }
 
-    @GetMapping("/users/{name}/{page}")
-    public ResponseEntity<Page<UtenteBasicDto>> getAllByNameLikePaged(@PathVariable("name") String n,
+    @GetMapping("/users/{prefix}/{page}")
+    public ResponseEntity<Page<UtenteBasicDto>> getAllByUsernameLikePaged(@PathVariable("prefix") String prefix,
             @PathVariable("page") int page) {
-        return ResponseEntity.ok(utenteService.getAllByNomeLike(n, page));
+        return ResponseEntity.ok(utenteService.getAllByUsernameLike(prefix, page));
     }
 
 }
