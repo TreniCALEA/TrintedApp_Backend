@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
+import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteDto;
 
 public interface UtenteService {
@@ -14,16 +15,16 @@ public interface UtenteService {
 
     UtenteDto save(UtenteDto utenteDto);
 
-    Collection<Utente> findAll(Specification<Utente> spec);
+    Collection<UtenteBasicDto> findAll(Specification<Utente> spec);
 
     UtenteDto getById(Long id);
 
-    Collection<UtenteDto> findAll();
+    Collection<UtenteBasicDto> findAll();
 
     void delete(Long id);
 
-    Page<UtenteDto> getAllPaged(int page);
+    Page<UtenteBasicDto> getAllPaged(int page);
 
-    Page<UtenteDto> getAllByNomeLike(String nome, int page);
+    Page<UtenteBasicDto> getAllByNomeLike(String nome, int page);
 
 }

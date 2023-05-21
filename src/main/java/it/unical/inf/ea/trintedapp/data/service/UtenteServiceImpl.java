@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
+import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +40,10 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public Collection<Utente> findAll(Specification<Utente> spec) {
-        return utenteDao.findAll(spec);
+    public Collection<UtenteBasicDto> findAll(Specification<Utente> spec) {
+        return utenteDao.findAll(spec).stream()
+                        .map(u -> modelMapper.map(u, UtenteBasicDto.class))
+                        .collect(Collectors.toList());
     }
 
     @Override
@@ -51,9 +54,9 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public Collection<UtenteDto> findAll() {
+    public Collection<UtenteBasicDto> findAll() {
         return utenteDao.findAll().stream()
-                .map(u -> modelMapper.map(u, UtenteDto.class))
+                .map(u -> modelMapper.map(u, UtenteBasicDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -65,15 +68,15 @@ public class UtenteServiceImpl implements UtenteService {
     private static final int SIZE_FOR_PAGE = 20;
 
     @Override
-    public Page<UtenteDto> getAllPaged(int page) {
+    public Page<UtenteBasicDto> getAllPaged(int page) {
         Page<Utente> utenti = utenteDao.findAll(PageRequest.of(page, SIZE_FOR_PAGE));
-        List<UtenteDto> listUtenti = utenti.stream().map(u -> modelMapper.map(u, UtenteDto.class))
+        List<UtenteBasicDto> listUtenti = utenti.stream().map(u -> modelMapper.map(u, UtenteBasicDto.class))
                 .collect(Collectors.toList());
         return new PageImpl<>(listUtenti);
     }
 
     @Override
-    public Page<UtenteDto> getAllByNomeLike(String nome, int page) {
+    public Page<UtenteBasicDto> getAllByNomeLike(String nome, int page) {
         PageRequest pageRequest = PageRequest.of(page, SIZE_FOR_PAGE, Sort.by("nome").ascending());
         List<UtenteDto> list = utenteDao.findAllByNomeLike(nome, pageRequest).stream()
                 .map(u -> modelMapper.map(u, UtenteDto.class))

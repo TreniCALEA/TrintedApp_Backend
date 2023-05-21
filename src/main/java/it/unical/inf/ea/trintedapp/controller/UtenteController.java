@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.unical.inf.ea.trintedapp.data.service.UtenteService;
+import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class UtenteController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<Collection<UtenteDto>> all() {
+    public ResponseEntity<Collection<UtenteBasicDto>> all() {
         return ResponseEntity.ok(utenteService.findAll());
     }
 
@@ -48,12 +49,12 @@ public class UtenteController {
     }
 
     @GetMapping("/users/all/{page}")
-    public ResponseEntity<Page<UtenteDto>> getAllPaged(@PathVariable("page") int page) {
+    public ResponseEntity<Page<UtenteBasicDto>> getAllPaged(@PathVariable("page") int page) {
         return ResponseEntity.ok(utenteService.getAllPaged(page));
     }
 
     @GetMapping("/users/{name}/{page}")
-    public ResponseEntity<Page<UtenteDto>> getAllByNameLikePaged(@PathVariable("name") String n,
+    public ResponseEntity<Page<UtenteBasicDto>> getAllByNameLikePaged(@PathVariable("name") String n,
             @PathVariable("page") int page) {
         return ResponseEntity.ok(utenteService.getAllByNomeLike(n, page));
     }

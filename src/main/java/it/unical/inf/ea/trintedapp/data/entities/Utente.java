@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -37,6 +38,10 @@ public class Utente {
 
     @Column(name = "cognome")
     private String cognome;
+
+    @Lob
+    @Column(name = "immagineProfilo")
+    private String immagine;
 
     @Embedded
     @AttributeOverrides({
