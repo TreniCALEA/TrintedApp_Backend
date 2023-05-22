@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import it.unical.inf.ea.trintedapp.data.service.OrdineService;
+import it.unical.inf.ea.trintedapp.dto.ArticoloDto;
 import it.unical.inf.ea.trintedapp.dto.OrdineDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,15 +38,17 @@ public class OrdineController {
         return (ordine != null) ? ResponseEntity.ok(ordine) : ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/orders")
-    public ResponseEntity<OrdineDto> add(@RequestBody @Valid OrdineDto ordine){
-        return ResponseEntity.ok(ordineService.save(ordine));
-    }
-
+    
     @DeleteMapping("/orders/{orderId}")
     public HttpStatus delete(@PathVariable("orderId") Long id) {
         ordineService.delete(id);
         return HttpStatus.OK;
     }
-
+    
+    @PostMapping("/orders")
+    public ResponseEntity<OrdineDto> add(@RequestParam Long acquirente, @RequestParam ArticoloDto articoloDto){
+        ordineService.confirmOrder(acquirente, articoloDto);
+        
+        return null;
+    }
 }

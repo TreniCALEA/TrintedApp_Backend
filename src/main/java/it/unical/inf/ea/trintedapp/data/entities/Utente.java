@@ -77,7 +77,7 @@ public class Utente {
     private List<Ordine> ordiniUtente;
 
     @Column(name = "saldo")
-    private Float saldo;
+    private Double saldo;
 
     @Column(name = "rating_genrale")
     private Float ratingGenerale;

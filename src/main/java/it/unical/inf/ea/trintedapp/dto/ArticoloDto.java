@@ -12,10 +12,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class ArticoloDto {
-
+    @NotNull
     private Long id;
 
-    @NotNull
     private String titolo;
 
     private String descrizione;
@@ -23,13 +22,12 @@ public class ArticoloDto {
     @NotNull
     private Double prezzo;
 
-    @NotNull
     private ArrayList<String> immagini;
 
-    private Utente utente;
+    @NotNull
+    private Long utente;
 
     private String categoria;
 
-    @NotNull
     private String condizioni;
 }
