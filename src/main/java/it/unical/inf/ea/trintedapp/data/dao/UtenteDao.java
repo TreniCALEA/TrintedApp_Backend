@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
@@ -20,6 +22,7 @@ public interface UtenteDao extends JpaRepository<Utente, Long>, JpaSpecification
 
     List<Utente> findAllByIsAdmin(Boolean isAdmin);
 
-    Page<Utente> findAllByCredenzialiUsernameLike(String credenzialiUsername, Pageable pageable);
+    @Query("from Utente u where u.credenziali.username like concat('%', :username, '%')")
+    Page<Utente> getByUsernameLike(@Param("username") String credenzialiUsername, Pageable pageable);
 
 }

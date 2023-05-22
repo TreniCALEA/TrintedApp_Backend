@@ -78,7 +78,7 @@ public class UtenteServiceImpl implements UtenteService {
     @Override
     public Page<UtenteBasicDto> getAllByUsernameLike(String nome, int page) {
         PageRequest pageRequest = PageRequest.of(page, SIZE_FOR_PAGE, Sort.by("nome").ascending());
-        List<UtenteBasicDto> list = utenteDao.findAllByCredenzialiUsernameLike(nome, pageRequest).stream()
+        List<UtenteBasicDto> list = utenteDao.getByUsernameLike(nome, pageRequest).stream()
                 .map(u -> modelMapper.map(u, UtenteBasicDto.class))
                 .collect(Collectors.toList());
         return new PageImpl<>(list);
