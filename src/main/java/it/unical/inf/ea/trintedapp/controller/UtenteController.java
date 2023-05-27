@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.unical.inf.ea.trintedapp.data.service.UtenteService;
 import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteDto;
+import it.unical.inf.ea.trintedapp.dto.UtenteRegistrationDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +30,7 @@ public class UtenteController {
     private final UtenteService utenteService;
 
     @PostMapping("/users")
-    public ResponseEntity<UtenteDto> add(@RequestBody @Valid UtenteDto utente) {
+    public ResponseEntity<UtenteRegistrationDto> add(@RequestBody @Valid UtenteRegistrationDto utente) {
         return ResponseEntity.ok(utenteService.save(utente));
     }
 

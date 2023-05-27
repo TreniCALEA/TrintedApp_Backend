@@ -8,12 +8,13 @@ import org.springframework.data.jpa.domain.Specification;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteDto;
+import it.unical.inf.ea.trintedapp.dto.UtenteRegistrationDto;
 
 public interface UtenteService {
 
     void save(Utente utente);
 
-    UtenteDto save(UtenteDto utenteDto);
+    UtenteRegistrationDto save(UtenteRegistrationDto utenteDto);
 
     Collection<UtenteBasicDto> findAll(Specification<Utente> spec);
 

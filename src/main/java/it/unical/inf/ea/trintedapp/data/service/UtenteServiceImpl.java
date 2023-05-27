@@ -16,6 +16,7 @@ import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteDto;
+import it.unical.inf.ea.trintedapp.dto.UtenteRegistrationDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
@@ -33,10 +34,10 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public UtenteDto save(UtenteDto utenteDto) {
+    public UtenteRegistrationDto save(UtenteRegistrationDto utenteDto) {
         Utente utente = modelMapper.map(utenteDto, Utente.class);
         Utente u = utenteDao.save(utente);
-        return modelMapper.map(u, UtenteDto.class);
+        return modelMapper.map(u, UtenteRegistrationDto.class);
     }
 
     @Override
