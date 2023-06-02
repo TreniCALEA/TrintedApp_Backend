@@ -10,8 +10,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import io.appwrite.ID;
+import io.appwrite.coroutines.CoroutineCallback;
+import io.appwrite.exceptions.AppwriteException;
+import it.unical.inf.ea.trintedapp.config.AppwriteConfig;
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
@@ -35,6 +41,19 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public UtenteRegistrationDto save(UtenteRegistrationDto utenteDto) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+        utenteDto.setCredenzialiPassword(passwordEncoder.encode(utenteDto.getCredenzialiPassword()));
+        try {
+            AppwriteConfig.users.createBcryptUser(ID.Companion.unique(), utenteDto.getCredenzialiEmail(),
+                    utenteDto.getCredenzialiPassword(),
+                    new CoroutineCallback<>((response, error) -> {
+                        if (error != null) {
+                            error.printStackTrace();
+                        }
+                        System.out.println(response);
+                    }));
+        } catch (AppwriteException e) {
+        }
         Utente utente = modelMapper.map(utenteDto, Utente.class);
         Utente u = utenteDao.save(utente);
         return modelMapper.map(u, UtenteRegistrationDto.class);
@@ -43,8 +62,8 @@ public class UtenteServiceImpl implements UtenteService {
     @Override
     public Collection<UtenteBasicDto> findAll(Specification<Utente> spec) {
         return utenteDao.findAll(spec).stream()
-                        .map(u -> modelMapper.map(u, UtenteBasicDto.class))
-                        .collect(Collectors.toList());
+                .map(u -> modelMapper.map(u, UtenteBasicDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override

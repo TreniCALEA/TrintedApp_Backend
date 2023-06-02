@@ -1,7 +1,12 @@
 package it.unical.inf.ea.trintedapp.dto;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
+@Data
+@RequiredArgsConstructor
 public class UtenteRegistrationDto {
 
     @NotNull
@@ -11,6 +16,7 @@ public class UtenteRegistrationDto {
     private String credenzialiEmail;
 
     @NotNull
+    @Size(min = 8)
     private String credenzialiPassword;
 
 }
