@@ -7,7 +7,7 @@ public class AppwriteConfig {
 
     public static final Client client = new Client("https://cloud.appwrite.io/v1", true)
             .setProject("645d4c2c39e030c6f6ba")
-            .setKey("bd00e06e50e7ff7727e053058b678909b02db0a2fb42d27efa97d9ade9fdf6616512ad56ce6373a1a2220c55909c810adb7bc709e9277f2f9886618b17a1fdec16f3665330d6095ebdcbbb284becce80ef9020adc589321e8049fdd4c2e8e8ba1f6b40018622c0ed5eec2a9f6949795a63fce513f9bd8d8c3f7f91030035f4e");
+            .setKey("43fb629cf369eb584caa3eb93a5bb1654e9c7cc8047a326222c1f0a4f00e4688fb62f297f7e406479c129f74cae4d65f0b1d8ab4040c37914f604e5a65e89cee519495ca39d77d8693d1623f84cc0e6f84133d438300d63018151db44c22ab525b5aec715677f73d6cf2ab6e9c632899615ef9ffb8c827dde924d103b8a85174");
 
     public static final Users users = new Users(client);
 
