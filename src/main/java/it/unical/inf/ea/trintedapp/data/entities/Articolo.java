@@ -14,7 +14,7 @@ import it.unical.inf.ea.trintedapp.dto.Condizioni;
 @Data
 @NoArgsConstructor
 public class Articolo {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -46,4 +46,8 @@ public class Articolo {
     @Enumerated(EnumType.STRING)
     @Column(name = "condizioni")
     private Condizioni condizioni;
+
+    @Column(name = "acquistabile")
+    private Boolean acquistabile;
+
 }
