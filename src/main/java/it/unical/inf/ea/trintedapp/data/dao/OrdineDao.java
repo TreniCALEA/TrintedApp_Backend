@@ -2,6 +2,7 @@ package it.unical.inf.ea.trintedapp.data.dao;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,9 +14,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrdineDao extends JpaRepository<Ordine, Long>{
     
-    List<Ordine> findAllByAcquirente(Utente acquirente);
+    Optional<Ordine> findAllByAcquirente(Long id);
 
-    List<Ordine> findAllByVenditore(Utente venditore);
+    Optional<Ordine> findAllByVenditore(Long id);
 
     List<Ordine> findAllByAcquirenteAndDataAcquistoBetween(Utente Acquirente, LocalDate from, LocalDate to);
 

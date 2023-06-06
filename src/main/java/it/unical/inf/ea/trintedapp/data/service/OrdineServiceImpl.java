@@ -2,6 +2,7 @@ package it.unical.inf.ea.trintedapp.data.service;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -49,9 +50,23 @@ public class OrdineServiceImpl implements OrdineService {
     }
 
     @Override
+    public List<OrdineDto> getByAcquirente(Long id) {
+        return ordineDao.findAllByAcquirente(id).stream()
+                .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrdineDto> getByVenditore(Long id) {
+        return ordineDao.findAllByVenditore(id).stream()
+                .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Collection<OrdineDto> findAll() {
         return ordineDao.findAll().stream()
-                .map(ord -> modelMapper.map(ord, OrdineDto.class))
+                .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
                 .collect(Collectors.toList());
     }
 
