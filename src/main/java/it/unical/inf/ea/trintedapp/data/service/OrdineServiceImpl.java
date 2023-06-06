@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import it.unical.inf.ea.trintedapp.data.dao.ArticoloDao;
 import it.unical.inf.ea.trintedapp.data.dao.OrdineDao;
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
+import it.unical.inf.ea.trintedapp.data.entities.Articolo;
 import it.unical.inf.ea.trintedapp.data.entities.Ordine;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.ArticoloDto;
@@ -20,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class OrdineServiceImpl implements OrdineService{
+public class OrdineServiceImpl implements OrdineService {
 
     private final OrdineDao ordineDao;
     private final ArticoloDao articoloDao;
@@ -42,16 +43,16 @@ public class OrdineServiceImpl implements OrdineService{
     @Override
     public OrdineDto getById(Long id) {
         return modelMapper.map(
-            ordineDao.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste ordine con id: [%s]", id))),
-            OrdineDto.class
-        );
+                ordineDao.findById(id).orElseThrow(
+                        () -> new EntityNotFoundException(String.format("Non esiste ordine con id: [%s]", id))),
+                OrdineDto.class);
     }
 
     @Override
     public Collection<OrdineDto> findAll() {
         return ordineDao.findAll().stream()
-            .map(ord -> modelMapper.map(ord, OrdineDto.class))
-            .collect(Collectors.toList());
+                .map(ord -> modelMapper.map(ord, OrdineDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -63,28 +64,30 @@ public class OrdineServiceImpl implements OrdineService{
     @Transactional
     public void confirmOrder(Long acquirente, ArticoloDto articoloDto) {
         Utente _acquirente = utenteDao.findById(acquirente).get();
-        Utente _venditore = utenteDao.findById( articoloDto.getUtente() ).get();
+        Utente _venditore = utenteDao.findById(articoloDto.getUtente()).get();
 
+        Articolo _articolo = articoloDao.findById(articoloDto.getId()).get();
 
-        if( _acquirente.getSaldo().compareTo(articoloDto.getPrezzo()) > 1 ){
-
+        if (_acquirente.getSaldo().compareTo(articoloDto.getPrezzo()) > 1) {
+            // create a new order in Ordine
             Ordine nuovoOrdine = new Ordine();
             nuovoOrdine.setAcquirente(_acquirente);
             nuovoOrdine.setVenditore(_venditore);
-            nuovoOrdine.setArticolo( articoloDao.findById(articoloDto.getId()).get() );
+            nuovoOrdine.setArticolo(_articolo);
             nuovoOrdine.setDataAcquisto(LocalDate.now());
-            
 
             ordineDao.save(nuovoOrdine);
 
-            _acquirente.setSaldo( _acquirente.getSaldo() - articoloDto.getPrezzo() );
-            _venditore.setSaldo( _venditore.getSaldo() + articoloDto.getPrezzo() );
+            // update Articolo
+            _articolo.setAcquistabile(false);
+            articoloDao.save(_articolo);
+
+            // update buyer and seller balance
+            _acquirente.setSaldo(_acquirente.getSaldo() - articoloDto.getPrezzo());
+            _venditore.setSaldo(_venditore.getSaldo() + articoloDto.getPrezzo());
 
             utenteDao.save(_acquirente);
             utenteDao.save(_venditore);
         }
-
-
     }
-    
 }
