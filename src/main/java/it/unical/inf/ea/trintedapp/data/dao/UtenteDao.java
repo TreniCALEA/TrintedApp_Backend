@@ -25,4 +25,6 @@ public interface UtenteDao extends JpaRepository<Utente, Long>, JpaSpecification
     @Query("from Utente u where u.credenziali.username like concat('%', :username, '%')")
     Page<Utente> getByUsernameLike(@Param("username") String credenzialiUsername, Pageable pageable);
 
+    Optional<Utente> findByCredenzialiEmail(String credenzialiEmail);
+
 }

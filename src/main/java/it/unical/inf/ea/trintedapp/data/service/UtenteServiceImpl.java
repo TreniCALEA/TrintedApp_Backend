@@ -46,6 +46,7 @@ public class UtenteServiceImpl implements UtenteService {
         try {
             AppwriteConfig.users.createBcryptUser(ID.Companion.unique(), utenteDto.getCredenzialiEmail(),
                     utenteDto.getCredenzialiPassword(),
+                    utenteDto.getCredenzialiUsername(),
                     new CoroutineCallback<>((response, error) -> {
                         if (error != null) {
                             error.printStackTrace();
@@ -104,4 +105,10 @@ public class UtenteServiceImpl implements UtenteService {
         return new PageImpl<>(list);
     }
 
+    @Override
+    public UtenteDto getByCredenzialiEmail(String credenzialiEmail) {
+        Utente utente = utenteDao.findByCredenzialiEmail(credenzialiEmail)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con email: [%s]", credenzialiEmail)));
+        return modelMapper.map(utente, UtenteDto.class);
+    }
 }

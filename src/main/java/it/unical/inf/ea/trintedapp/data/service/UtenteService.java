@@ -28,4 +28,6 @@ public interface UtenteService {
 
     Page<UtenteBasicDto> getAllByUsernameLike(String nome, int page);
 
+    UtenteDto getByCredenzialiEmail(String credenzialiEmail);
+
 }
