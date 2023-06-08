@@ -62,7 +62,7 @@ public class UtenteController {
         return ResponseEntity.ok(utenteService.getAllByUsernameLike(prefix, page));
     }
 
-    @GetMapping("/users/{credenzialiEmail}")
+    @GetMapping("/users/email/{credenzialiEmail}")
     public ResponseEntity<UtenteDto> getByCredenzialiEmail(@PathVariable("credenzialiEmail") String credenzialiEmail) {
         UtenteDto utente = utenteService.getByCredenzialiEmail(credenzialiEmail);
         return ResponseEntity.ok(utente);
