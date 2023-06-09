@@ -26,4 +26,6 @@ public class UtenteDto {
 
     private Float ratingGenerale;
 
+    private String immagine;
+
 }
