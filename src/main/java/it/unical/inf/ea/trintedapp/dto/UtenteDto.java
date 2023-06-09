@@ -1,5 +1,6 @@
 package it.unical.inf.ea.trintedapp.dto;
 
+import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -27,5 +28,7 @@ public class UtenteDto {
     private Float ratingGenerale;
 
     private String immagine;
+
+    private Indirizzo indirizzo;
 
 }
