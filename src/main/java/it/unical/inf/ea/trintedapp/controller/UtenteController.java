@@ -56,10 +56,9 @@ public class UtenteController {
         return ResponseEntity.ok(utenteService.getAllPaged(page));
     }
 
-    @GetMapping("/users/{prefix}/{page}")
-    public ResponseEntity<Page<UtenteBasicDto>> getAllByUsernameLikePaged(@PathVariable("prefix") String prefix,
-            @PathVariable("page") int page) {
-        return ResponseEntity.ok(utenteService.getAllByUsernameLike(prefix, page));
+    @GetMapping("/users/find/{prefix}")
+    public ResponseEntity<Collection<UtenteBasicDto>> getAllByUsernameLike(@PathVariable("prefix") String prefix) {
+        return ResponseEntity.ok(utenteService.getAllByUsernameLike(prefix));
     }
 
     @GetMapping("/users/email/{credenzialiEmail}")

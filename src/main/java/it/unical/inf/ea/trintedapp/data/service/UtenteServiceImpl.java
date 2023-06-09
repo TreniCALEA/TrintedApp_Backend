@@ -111,4 +111,12 @@ public class UtenteServiceImpl implements UtenteService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con email: [%s]", credenzialiEmail)));
         return modelMapper.map(utente, UtenteDto.class);
     }
+
+    @Override
+    public Collection<UtenteBasicDto> getAllByUsernameLike(String credenzialiUsername) {
+        return utenteDao.getAllByCredenzialiUsernameLike(credenzialiUsername).stream()
+                .map(u -> modelMapper.map(u, UtenteBasicDto.class))
+                .collect(Collectors.toList());
+    }
+
 }

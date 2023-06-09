@@ -18,7 +18,8 @@ public interface UtenteDao extends JpaRepository<Utente, Long>, JpaSpecification
 
     List<Utente> findAllByRatingGeneraleOrderByRatingGenerale(Float ratingGenerale);
 
-    Optional<Utente> findByCredenzialiUsername(String username);
+    @Query("from Utente u where u.credenziali.username like concat('%', :username, '%')")
+    List<Utente> getAllByCredenzialiUsernameLike(@Param("username") String credenzialiUsername);
 
     List<Utente> findAllByIsAdmin(Boolean isAdmin);
 
