@@ -21,7 +21,7 @@ public class RecensioneController {
     private final RecensioneService recensioneService;
 
     @PostMapping("/review")
-    public HttpStatus add(@RequestBody @Valid RecensioneDto review) {
+    public HttpStatus add(@RequestBody @Valid Recensione review) {
         recensioneService.save(review);
         return HttpStatus.OK;
     }
