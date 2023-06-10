@@ -10,7 +10,6 @@ import lombok.ToString;
 @ToString
 public class RecensioneDto {
 
-    @NotNull
     private Long id;
 
     @NotNull

@@ -21,9 +21,8 @@ public class RecensioneController {
     private final RecensioneService recensioneService;
 
     @PostMapping("/review")
-    public HttpStatus add(@RequestBody @Valid Recensione review) {
-        recensioneService.save(review);
-        return HttpStatus.OK;
+    public ResponseEntity<RecensioneDto> add(@RequestBody @Valid RecensioneDto review) {
+        return ResponseEntity.ok(recensioneService.save(review));
     }
 
     @GetMapping("/review/{reviewId}")

@@ -11,6 +11,8 @@ public interface RecensioneService {
 
     void save(Recensione recensione);
 
+    RecensioneDto save(RecensioneDto recensionedDto);
+
     List<Recensione> findAll(Long id);
 
     RecensioneDto getById(Long id);

@@ -29,12 +29,6 @@ public class RecensioneServiceImpl implements RecensioneService{
 
     @Override
     public void save(Recensione recensione) {
-        Utente u = recensione.getDestinatario();
-        List<Recensione> recensioni = findAll(u.getId());
-        float sum = 0;
-        for (Recensione r : recensioni) sum += r.getRating();
-        u.setRatingGenerale(sum/recensioni.size());
-        utenteDao.save(u);
         recensioneDao.save(recensione);
     }
 
@@ -71,6 +65,19 @@ public class RecensioneServiceImpl implements RecensioneService{
         List<RecensioneDto> listRecensioni = recensioni.stream().map(recensione -> modelMapper.map(recensione, RecensioneDto.class))
                 .collect(Collectors.toList());
         return new PageImpl<>(listRecensioni);
+    }
+
+    @Override
+    public RecensioneDto save(RecensioneDto recensioneDto) {
+        Recensione recensione = modelMapper.map(recensioneDto, Recensione.class);
+        Recensione recensione1 = recensioneDao.save(recensione);
+        Utente u = recensione1.getDestinatario();
+        List<Recensione> recensioni = findAll(u.getId());
+        float sum = 0;
+        for (Recensione r : recensioni) sum += r.getRating();
+        u.setRatingGenerale(sum/recensioni.size());
+        utenteDao.save(u);
+        return modelMapper.map(recensione1, RecensioneDto.class);
     }
 
 }
