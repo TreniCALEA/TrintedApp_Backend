@@ -1,7 +1,9 @@
 package it.unical.inf.ea.trintedapp.data.service;
 
 import it.unical.inf.ea.trintedapp.data.dao.RecensioneDao;
+import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
 import it.unical.inf.ea.trintedapp.data.entities.Recensione;
+import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.RecensioneDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +24,8 @@ import java.util.stream.Collectors;
 public class RecensioneServiceImpl implements RecensioneService{
 
     private final RecensioneDao recensioneDao;
-
     private final ModelMapper modelMapper;
+    private final UtenteDao utenteDao;
 
     @Override
     public void save(Recensione recensione) {
@@ -34,6 +36,12 @@ public class RecensioneServiceImpl implements RecensioneService{
     public RecensioneDto save(RecensioneDto recensioneDto) {
         Recensione recensione = modelMapper.map(recensioneDto, Recensione.class);
         Recensione recensione1 = recensioneDao.save(recensione);
+        Utente u = recensione1.getDestinatario();
+        List<Recensione> recensioni = findAll(u.getId());
+        float sum = 0;
+        for (Recensione r : recensioni) sum += r.getRating();
+        u.setRatingGenerale(sum/recensioni.size());
+        utenteDao.save(u);
         return modelMapper.map(recensione1, RecensioneDto.class);
     }
 
