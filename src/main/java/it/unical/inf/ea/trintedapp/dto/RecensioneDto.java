@@ -18,4 +18,10 @@ public class RecensioneDto {
 
     private String commento;
 
+    @NotNull
+    private String autoreCredenzialiEmail;
+
+    @NotNull
+    private String destinatarioCredenzialiEmail;
+
 }

@@ -20,10 +20,10 @@ public class UtenteDto {
     @NotNull
     private String cognome;
 
-    private String credenzialiUsername;
-
     @Email
     private String credenzialiEmail;
+
+    private String credenzialiUsername;
 
     private Boolean isAdmin;
 
