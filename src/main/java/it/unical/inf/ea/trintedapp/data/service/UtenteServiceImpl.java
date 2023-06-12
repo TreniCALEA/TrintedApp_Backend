@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import io.appwrite.ID;
 import io.appwrite.coroutines.CoroutineCallback;
 import io.appwrite.exceptions.AppwriteException;
+import io.appwrite.models.User;
+import io.appwrite.models.UserList;
 import it.unical.inf.ea.trintedapp.config.AppwriteConfig;
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
@@ -83,6 +85,30 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public void delete(Long id) {
+        Utente utente = utenteDao.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
+        try {
+            AppwriteConfig.users.list(
+            new CoroutineCallback<>((response, error) -> {
+                UserList<?> users = (UserList<?>) response;
+                for (User user : users.getUsers()) {
+                    if (user.getEmail().equals(utente.getCredenziali().getEmail())) {
+                        try {
+                            AppwriteConfig.users.delete(user.getId(), new CoroutineCallback<>((response2, error2) -> {
+                                if (error2 != null) {
+                                    error2.printStackTrace();
+                                }
+                                System.out.println(response2);
+                            }));
+                        } catch (AppwriteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            })
+        );
+        } catch (Exception e) {
+        }
         utenteDao.deleteById(id);
     }
 
@@ -108,7 +134,8 @@ public class UtenteServiceImpl implements UtenteService {
     @Override
     public UtenteDto getByCredenzialiEmail(String credenzialiEmail) {
         Utente utente = utenteDao.findByCredenzialiEmail(credenzialiEmail)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con email: [%s]", credenzialiEmail)));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Non esiste un utente con email: [%s]", credenzialiEmail)));
         return modelMapper.map(utente, UtenteDto.class);
     }
 
