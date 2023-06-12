@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.service.OrdineService;
 import it.unical.inf.ea.trintedapp.dto.ArticoloDto;
 import it.unical.inf.ea.trintedapp.dto.OrdineDto;
@@ -45,8 +46,8 @@ public class OrdineController {
     }
 
     @PostMapping("/orders")
-    public ResponseEntity<OrdineDto> add(@RequestParam Long acquirente, @RequestParam ArticoloDto articoloDto) {
-        ordineService.confirmOrder(acquirente, articoloDto);
+    public ResponseEntity<OrdineDto> add(@RequestParam Long acquirente, @RequestParam ArticoloDto articoloDto, @RequestParam Indirizzo indirizzo) {
+        ordineService.confirmOrder(acquirente, articoloDto, indirizzo);
 
         return null;
     }

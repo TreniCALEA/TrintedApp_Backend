@@ -3,6 +3,7 @@ package it.unical.inf.ea.trintedapp.dto;
 import java.time.LocalDate;
 
 import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
+import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
@@ -19,6 +20,10 @@ public class OrdineDto {
     @NotNull
     @PastOrPresent
     private LocalDate dataAcquisto;
+
+    private Utente acquirente;
+    
+    private Utente venditore;
 
     private Indirizzo indirizzo;
     

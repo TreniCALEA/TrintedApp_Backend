@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.entities.Ordine;
 import it.unical.inf.ea.trintedapp.dto.ArticoloDto;
 import it.unical.inf.ea.trintedapp.dto.OrdineDto;
@@ -20,7 +21,7 @@ public interface OrdineService {
 
     void delete(Long id);
 
-    void confirmOrder(Long acquirente, ArticoloDto articoloDto);
+    void confirmOrder(Long acquirente, ArticoloDto articoloDto, Indirizzo indirizzo);
 
     List<OrdineDto> getByAcquirente(Long id);
 

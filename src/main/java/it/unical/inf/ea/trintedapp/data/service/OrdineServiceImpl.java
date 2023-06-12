@@ -12,6 +12,7 @@ import it.unical.inf.ea.trintedapp.data.dao.ArticoloDao;
 import it.unical.inf.ea.trintedapp.data.dao.OrdineDao;
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
 import it.unical.inf.ea.trintedapp.data.entities.Articolo;
+import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.entities.Ordine;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.ArticoloDto;
@@ -77,7 +78,7 @@ public class OrdineServiceImpl implements OrdineService {
 
     @Override
     @Transactional
-    public void confirmOrder(Long acquirente, ArticoloDto articoloDto) {
+    public void confirmOrder(Long acquirente, ArticoloDto articoloDto, Indirizzo indirizzo) {
         Utente _acquirente = utenteDao.findById(acquirente).get();
         Utente _venditore = utenteDao.findById(articoloDto.getUtente()).get();
 
@@ -90,6 +91,7 @@ public class OrdineServiceImpl implements OrdineService {
             nuovoOrdine.setVenditore(_venditore);
             nuovoOrdine.setArticolo(_articolo);
             nuovoOrdine.setDataAcquisto(LocalDate.now());
+            nuovoOrdine.setIndirizzo(indirizzo);
 
             ordineDao.save(nuovoOrdine);
 
