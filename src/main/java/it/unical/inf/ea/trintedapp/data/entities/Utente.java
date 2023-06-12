@@ -3,6 +3,8 @@ package it.unical.inf.ea.trintedapp.data.entities;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.CascadeType;
@@ -51,9 +53,11 @@ public class Utente {
     })
     private Indirizzo indirizzo;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "autore", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Recensione> recensioniRicevute;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Articolo> articoli;
 

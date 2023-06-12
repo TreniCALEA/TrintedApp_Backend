@@ -1,5 +1,7 @@
 package it.unical.inf.ea.trintedapp.data.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,10 +23,12 @@ public class Recensione {
     @Column(name = "commento")
     private String commento;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "destinatario")
     private Utente destinatario;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "autore")
     private Utente autore;
