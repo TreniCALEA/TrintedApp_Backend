@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,15 +71,43 @@ public class RecensioneServiceImpl implements RecensioneService{
     @Override
     public RecensioneDto save(RecensioneDto recensioneDto) {
         Recensione recensione = modelMapper.map(recensioneDto, Recensione.class);
-        Recensione recensione1 = recensioneDao.save(recensione);
-        Utente u = recensione1.getDestinatario();
-        List<Recensione> recensioni = findAll(u.getId());
-        float sum = 0;
-        for (Recensione r : recensioni) sum += r.getRating();
-        u.setRatingGenerale(sum/recensioni.size());
-        utenteDao.save(u);
-        return modelMapper.map(recensione1, RecensioneDto.class);
+
+        // Get the Utente objects based on the email
+        Optional<Utente> autoreOptional = utenteDao.findByCredenzialiEmail(recensioneDto.getAutoreCredenzialiEmail());
+        Optional<Utente> destinatarioOptional = utenteDao.findByCredenzialiEmail(recensioneDto.getDestinatarioCredenzialiEmail());
+
+        if (autoreOptional.isPresent() && destinatarioOptional.isPresent()) {
+            Utente autore = autoreOptional.get();
+            Utente destinatario = destinatarioOptional.get();
+
+            // Set the Utente objects as the autore and destinatario
+            recensione.setAutore(autore);
+            recensione.setDestinatario(destinatario);
+
+            Recensione recensione1 = recensioneDao.save(recensione);
+
+            // Update rating accordingly
+            List<Recensione> recensioni = findAll(destinatario.getId());
+            if (!recensioni.isEmpty()) {
+                float sum = 0;
+                for (Recensione r : recensioni) {
+                    sum += r.getRating();
+                }
+                destinatario.setRatingGenerale(sum / recensioni.size());
+            } else {
+                destinatario.setRatingGenerale(recensione.getRating());
+            }
+
+            System.out.println(destinatario);
+            utenteDao.save(destinatario);
+
+            return modelMapper.map(recensione1, RecensioneDto.class);
+        } else {
+            // Handle the case when autore or destinatario is not found
+            throw new IllegalArgumentException("Invalid autore or destinatario email");
+        }
     }
+
 
 }
 

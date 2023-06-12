@@ -26,9 +26,8 @@ public interface RecensioneDao extends JpaRepository<Recensione, Long>, JpaSpeci
         return new Specification<Recensione>() {
             @Override
             public Predicate toPredicate(Root<Recensione> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                return criteriaBuilder.equal(root.get("destinatario"), "%"+id+"%");
+                return criteriaBuilder.equal(root.get("destinatario").get("id"), id);
             }
         };
     }
-
 }
