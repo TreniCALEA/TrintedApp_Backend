@@ -149,15 +149,14 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public UtenteCompletionDto update(Long id, UtenteCompletionDto UtenteCompletionDto) {
-        Utente utente = utenteDao.findById(id)
+    public void update(Long id, UtenteCompletionDto UtenteCompletionDto) {
+         Utente utente = utenteDao.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
         utente.setNome(UtenteCompletionDto.getNome());
         utente.setCognome(UtenteCompletionDto.getCognome());
         utente.setImmagine(UtenteCompletionDto.getImmagine());
         utente.setIndirizzo(UtenteCompletionDto.getIndirizzo());
         utenteDao.save(utente);
-        return modelMapper.map(utente, UtenteCompletionDto.class);
     }
 
 }

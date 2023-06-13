@@ -35,6 +35,6 @@ public interface UtenteService {
 
     UtenteDto getByCredenzialiEmail(String credenzialiEmail);
 
-    UtenteCompletionDto update(Long id, UtenteCompletionDto utenteDto);
+    void update(Long id, UtenteCompletionDto utenteDto);
 
 }

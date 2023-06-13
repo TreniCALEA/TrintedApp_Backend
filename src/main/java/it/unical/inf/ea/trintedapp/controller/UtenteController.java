@@ -31,9 +31,10 @@ public class UtenteController {
     private final UtenteService utenteService;
 
     @PostMapping("/users/{idUser}")
-    public ResponseEntity<UtenteCompletionDto> update(@PathVariable("idUser") Long id,
+    public HttpStatus update(@PathVariable("idUser") Long id,
             @RequestBody @Valid UtenteCompletionDto utente) {
-        return ResponseEntity.ok(utenteService.update(id, utente));
+        utenteService.update(id, utente);
+        return HttpStatus.OK;
     }
 
     @PostMapping("/users")
