@@ -21,8 +21,10 @@ import io.appwrite.models.User;
 import io.appwrite.models.UserList;
 import it.unical.inf.ea.trintedapp.config.AppwriteConfig;
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
+import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
+import it.unical.inf.ea.trintedapp.dto.UtenteCompletionDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteRegistrationDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -144,6 +146,18 @@ public class UtenteServiceImpl implements UtenteService {
         return utenteDao.getAllByCredenzialiUsernameLike(credenzialiUsername).stream()
                 .map(u -> modelMapper.map(u, UtenteBasicDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UtenteCompletionDto update(Long id, UtenteCompletionDto UtenteCompletionDto) {
+        Utente utente = utenteDao.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
+        utente.setNome(UtenteCompletionDto.getNome());
+        utente.setCognome(UtenteCompletionDto.getCognome());
+        utente.setImmagine(UtenteCompletionDto.getImmagine());
+        utente.setIndirizzo(UtenteCompletionDto.getIndirizzo());
+        utenteDao.save(utente);
+        return modelMapper.map(utente, UtenteCompletionDto.class);
     }
 
 }

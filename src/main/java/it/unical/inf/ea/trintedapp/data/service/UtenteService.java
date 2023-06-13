@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
+import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
+import it.unical.inf.ea.trintedapp.dto.UtenteCompletionDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteRegistrationDto;
 
@@ -32,5 +34,7 @@ public interface UtenteService {
     Page<UtenteBasicDto> getAllByUsernameLike(String nome, int page);
 
     UtenteDto getByCredenzialiEmail(String credenzialiEmail);
+
+    UtenteCompletionDto update(Long id, UtenteCompletionDto utenteDto);
 
 }
