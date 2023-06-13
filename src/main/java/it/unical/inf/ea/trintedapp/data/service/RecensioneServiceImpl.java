@@ -55,7 +55,25 @@ public class RecensioneServiceImpl implements RecensioneService{
 
     @Override
     public void delete(Long id) {
+        RecensioneDto recensione = getById(id);
         recensioneDao.deleteById(id);
+        
+        // Update destinatario's rating accordingly
+        Optional<Utente> destinatarioOptional = utenteDao.findByCredenzialiEmail(recensione.getDestinatarioCredenzialiEmail());
+        Utente destinatario = destinatarioOptional.get();
+
+        List<Recensione> recensioni = findAll(destinatario.getId());
+        if (!recensioni.isEmpty()) {
+            float sum = 0;
+            for (Recensione r : recensioni) {
+                sum += r.getRating();
+            }
+            destinatario.setRatingGenerale(sum / recensioni.size());
+        } else {
+            destinatario.setRatingGenerale(null);
+        }
+
+        utenteDao.save(destinatario);
     }
 
     private static final int SIZE_FOR_PAGE = 20;
@@ -98,7 +116,6 @@ public class RecensioneServiceImpl implements RecensioneService{
                 destinatario.setRatingGenerale(recensione.getRating());
             }
 
-            System.out.println(destinatario);
             utenteDao.save(destinatario);
 
             return modelMapper.map(recensione1, RecensioneDto.class);
