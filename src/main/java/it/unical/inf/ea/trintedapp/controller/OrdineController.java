@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.service.OrdineService;
@@ -45,11 +46,10 @@ public class OrdineController {
         return HttpStatus.OK;
     }
 
-    @PostMapping("/orders/{acquirente}")
-    public ResponseEntity<OrdineDto> add(@PathVariable("acquirente") Long acquirente, @RequestParam ArticoloDto articoloDto, @RequestParam Indirizzo indirizzo) {
-        ordineService.confirmOrder(acquirente, articoloDto, indirizzo);
-
-        return null;
+    @PostMapping("/orders/{acquirente}/{articoloId}")
+    public HttpStatus add(@PathVariable ("acquirente") Long acquirente, @PathVariable ("articoloId") Long articoloId, @RequestBody Indirizzo indirizzo) {
+        ordineService.confirmOrder(acquirente, articoloId, indirizzo);
+        return HttpStatus.OK;
     }
 
     @GetMapping("/seller")

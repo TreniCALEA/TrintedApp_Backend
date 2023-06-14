@@ -21,7 +21,7 @@ public interface OrdineService {
 
     void delete(Long id);
 
-    void confirmOrder(Long acquirente, ArticoloDto articoloDto, Indirizzo indirizzo);
+    void confirmOrder(Long acquirente, Long articoloId, Indirizzo indirizzo);
 
     List<OrdineDto> getByAcquirente(Long id);
 

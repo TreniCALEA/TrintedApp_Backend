@@ -78,33 +78,24 @@ public class OrdineServiceImpl implements OrdineService {
 
     @Override
     @Transactional
-    public void confirmOrder(Long acquirente, ArticoloDto articoloDto, Indirizzo indirizzo) {
+    public void confirmOrder(Long acquirente, Long articoloId, Indirizzo indirizzo) {
+        Articolo _articolo = articoloDao.findById(articoloId).get();
+
         Utente _acquirente = utenteDao.findById(acquirente).get();
-        Utente _venditore = utenteDao.findById(articoloDto.getUtenteId()).get();
+        Utente _venditore = utenteDao.findById(_articolo.getUtente().getId()).get();
 
-        Articolo _articolo = articoloDao.findById(articoloDto.getId()).get();
+        // create a new order in Ordine
+        Ordine nuovoOrdine = new Ordine();
+        nuovoOrdine.setAcquirente(_acquirente);
+        nuovoOrdine.setVenditore(_venditore);
+        nuovoOrdine.setArticolo(_articolo);
+        nuovoOrdine.setDataAcquisto(LocalDate.now());
 
-        if (_acquirente.getSaldo().compareTo(articoloDto.getPrezzo()) > 1) {
-            // create a new order in Ordine
-            Ordine nuovoOrdine = new Ordine();
-            nuovoOrdine.setAcquirente(_acquirente);
-            nuovoOrdine.setVenditore(_venditore);
-            nuovoOrdine.setArticolo(_articolo);
-            nuovoOrdine.setDataAcquisto(LocalDate.now());
-            nuovoOrdine.setIndirizzo(indirizzo);
+        nuovoOrdine.setIndirizzo(indirizzo);
+        ordineDao.save(nuovoOrdine);
 
-            ordineDao.save(nuovoOrdine);
-
-            // update Articolo
-            _articolo.setAcquistabile(false);
-            articoloDao.save(_articolo);
-
-            // update buyer and seller balance
-            _acquirente.setSaldo(_acquirente.getSaldo() - articoloDto.getPrezzo());
-            _venditore.setSaldo(_venditore.getSaldo() + articoloDto.getPrezzo());
-
-            utenteDao.save(_acquirente);
-            utenteDao.save(_venditore);
-        }
+        // update Articolo
+        _articolo.setAcquistabile(false);
+        articoloDao.save(_articolo);
     }
 }
