@@ -80,7 +80,7 @@ public class OrdineServiceImpl implements OrdineService {
     @Transactional
     public void confirmOrder(Long acquirente, ArticoloDto articoloDto, Indirizzo indirizzo) {
         Utente _acquirente = utenteDao.findById(acquirente).get();
-        Utente _venditore = utenteDao.findById(articoloDto.getUtente()).get();
+        Utente _venditore = utenteDao.findById(articoloDto.getUtenteId()).get();
 
         Articolo _articolo = articoloDao.findById(articoloDto.getId()).get();
 

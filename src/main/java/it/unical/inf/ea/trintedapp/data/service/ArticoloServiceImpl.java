@@ -1,7 +1,9 @@
 package it.unical.inf.ea.trintedapp.data.service;
 
 import it.unical.inf.ea.trintedapp.data.dao.ArticoloDao;
+import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
 import it.unical.inf.ea.trintedapp.data.entities.Articolo;
+import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.ArticoloDto;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -11,13 +13,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ArticoloServiceImpl implements ArticoloService {
-    private final ArticoloDao articoloDao;
 
-    private ModelMapper modelMapper;
+    private final ArticoloDao articoloDao;
+    private final UtenteDao utenteDao;
+    private final ModelMapper modelMapper;
 
     @Override
     public void save(Articolo articolo) {
@@ -27,6 +31,10 @@ public class ArticoloServiceImpl implements ArticoloService {
     @Override
     public ArticoloDto save(ArticoloDto articoloDto) {
         Articolo articolo = modelMapper.map(articoloDto, Articolo.class);
+        
+        Optional<Utente> venditore = utenteDao.findById(articoloDto.getUtenteId());
+        articolo.setUtente(venditore.get());
+
         Articolo a = articoloDao.save(articolo);
         return modelMapper.map(a, ArticoloDto.class);
     }

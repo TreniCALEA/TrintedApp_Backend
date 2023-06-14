@@ -25,7 +25,7 @@ public class ArticoloDto {
     private ArrayList<String> immagini;
 
     @NotNull
-    private Long utente;
+    private Long utenteId;
 
     private String categoria;
 
