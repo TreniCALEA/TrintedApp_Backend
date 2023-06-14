@@ -31,7 +31,7 @@ public class ArticoloServiceImpl implements ArticoloService {
     @Override
     public ArticoloDto save(ArticoloDto articoloDto) {
         Articolo articolo = modelMapper.map(articoloDto, Articolo.class);
-        
+
         Optional<Utente> venditore = utenteDao.findById(articoloDto.getUtenteId());
         articolo.setUtente(venditore.get());
 
@@ -60,6 +60,13 @@ public class ArticoloServiceImpl implements ArticoloService {
     @Override
     public void delete(Long id) {
         articoloDao.deleteById(id);
+    }
+
+    @Override
+    public Collection<ArticoloDto> getByTitoloContainingOrDescrizioneContaining(String titolo, String descrizione) {
+        return articoloDao.findByTitoloContainingOrDescrizioneContaining(titolo, descrizione).stream()
+                .map(u -> modelMapper.map(u, ArticoloDto.class))
+                .collect(Collectors.toList());
     }
 
 }

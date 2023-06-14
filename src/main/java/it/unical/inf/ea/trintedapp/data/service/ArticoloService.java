@@ -18,4 +18,7 @@ public interface ArticoloService {
     Collection<ArticoloDto> findAll();
 
     void delete(Long id);
+
+    Collection<ArticoloDto> getByTitoloContainingOrDescrizioneContaining(String titolo, String descrizione);
+
 }

@@ -36,4 +36,10 @@ public class ArticoloController {
         articoloService.delete(id);
         return HttpStatus.OK;
     }
+
+    @GetMapping("/item/search/{searchValue}")
+    public ResponseEntity<Collection<ArticoloDto>> getByTitoloContainingOrDescrizioneContaining(@PathVariable("searchValue") String searchValue) {
+        return ResponseEntity.ok(articoloService.getByTitoloContainingOrDescrizioneContaining(searchValue, searchValue));
+    }
+
 }
