@@ -12,7 +12,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class ArticoloDto {
-    @NotNull
     private Long id;
 
     private String titolo;
