@@ -45,8 +45,8 @@ public class OrdineController {
         return HttpStatus.OK;
     }
 
-    @PostMapping("/orders")
-    public ResponseEntity<OrdineDto> add(@RequestParam Long acquirente, @RequestParam ArticoloDto articoloDto, @RequestParam Indirizzo indirizzo) {
+    @PostMapping("/orders/{acquirente}")
+    public ResponseEntity<OrdineDto> add(@PathVariable("acquirente") Long acquirente, @RequestParam ArticoloDto articoloDto, @RequestParam Indirizzo indirizzo) {
         ordineService.confirmOrder(acquirente, articoloDto, indirizzo);
 
         return null;
