@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import io.appwrite.models.Session;
+
 import java.util.Collection;
 
 @RestController
@@ -17,7 +20,7 @@ public class ArticoloController {
     private final ArticoloService articoloService;
 
     @PostMapping("/item")
-    public ResponseEntity<ArticoloDto> add(@RequestBody @Valid ArticoloDto articolo) {
+    public ResponseEntity<ArticoloDto> add(@RequestBody @Valid ArticoloDto articolo, @RequestBody Session session) {
         return ResponseEntity.ok(articoloService.save(articolo));
     }
 
@@ -32,9 +35,8 @@ public class ArticoloController {
     }
 
     @DeleteMapping("/item/{idItem}")
-    public HttpStatus delete(@PathVariable("idItem") Long id) {
-        articoloService.delete(id);
-        return HttpStatus.OK;
+    public HttpStatus delete(@PathVariable("idItem") Long id, @RequestBody Session session) {
+        return articoloService.delete(id, session);
     }
 
     @GetMapping("/item/search/{searchValue}")

@@ -2,15 +2,12 @@ package it.unical.inf.ea.trintedapp.data.service;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
-
 import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.entities.Ordine;
-import it.unical.inf.ea.trintedapp.dto.ArticoloDto;
 import it.unical.inf.ea.trintedapp.dto.OrdineDto;
 
 public interface OrdineService {
-    
+
     void save(Ordine ordine);
 
     OrdineDto save(OrdineDto ordineDto);
@@ -26,5 +23,5 @@ public interface OrdineService {
     List<OrdineDto> getByAcquirente(Long id);
 
     List<OrdineDto> getByVenditore(Long id);
-    
+
 }

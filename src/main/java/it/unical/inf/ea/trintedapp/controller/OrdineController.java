@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.service.OrdineService;
-import it.unical.inf.ea.trintedapp.dto.ArticoloDto;
 import it.unical.inf.ea.trintedapp.dto.OrdineDto;
 import lombok.RequiredArgsConstructor;
 

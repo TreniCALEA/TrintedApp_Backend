@@ -2,7 +2,6 @@ package it.unical.inf.ea.trintedapp.dto;
 
 import java.util.ArrayList;
 
-import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;

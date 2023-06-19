@@ -17,11 +17,8 @@ import org.springframework.stereotype.Service;
 import io.appwrite.ID;
 import io.appwrite.coroutines.CoroutineCallback;
 import io.appwrite.exceptions.AppwriteException;
-import io.appwrite.models.User;
-import io.appwrite.models.UserList;
 import it.unical.inf.ea.trintedapp.config.AppwriteConfig;
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
-import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteCompletionDto;
@@ -93,24 +90,23 @@ public class UtenteServiceImpl implements UtenteService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
         try {
             AppwriteConfig.users.list(
-            new CoroutineCallback<>((response, error) -> {
-                UserList<?> users = (UserList<?>) response;
-                for (User user : users.getUsers()) {
-                    if (user.getEmail().equals(utente.getCredenziali().getEmail())) {
-                        try {
-                            AppwriteConfig.users.delete(user.getId(), new CoroutineCallback<>((response2, error2) -> {
-                                if (error2 != null) {
-                                    error2.printStackTrace();
+                    new CoroutineCallback<>((response, error) -> {
+                        response.getUsers().forEach(user -> {
+                            if (user.getEmail().equals(utente.getCredenziali().getEmail())) {
+                                try {
+                                    AppwriteConfig.users.delete(user.getId(),
+                                            new CoroutineCallback<>((response2, error2) -> {
+                                                if (error2 != null) {
+                                                    error2.printStackTrace();
+                                                }
+                                                System.out.println(response2);
+                                            }));
+                                } catch (AppwriteException e) {
+                                    e.printStackTrace();
                                 }
-                                System.out.println(response2);
-                            }));
-                        } catch (AppwriteException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            })
-        );
+                            }
+                        });
+                    }));
         } catch (Exception e) {
         }
         utenteDao.deleteById(id);
@@ -152,11 +148,11 @@ public class UtenteServiceImpl implements UtenteService {
 
     @Override
     public void update(Long id, UtenteCompletionDto UtenteCompletionDto) {
-         Utente utente = utenteDao.findById(id)
+        Utente utente = utenteDao.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
         utente.setNome(UtenteCompletionDto.getNome());
         utente.setCognome(UtenteCompletionDto.getCognome());
-        if(UtenteCompletionDto.getImmagine() == null) {
+        if (UtenteCompletionDto.getImmagine() == null) {
             utente.setImmagine(pfpImg);
         } else {
             utente.setImmagine(UtenteCompletionDto.getImmagine());

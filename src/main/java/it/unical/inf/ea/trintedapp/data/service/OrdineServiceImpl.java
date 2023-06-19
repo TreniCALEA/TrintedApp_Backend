@@ -15,7 +15,6 @@ import it.unical.inf.ea.trintedapp.data.entities.Articolo;
 import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.entities.Ordine;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
-import it.unical.inf.ea.trintedapp.dto.ArticoloDto;
 import it.unical.inf.ea.trintedapp.dto.OrdineDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;

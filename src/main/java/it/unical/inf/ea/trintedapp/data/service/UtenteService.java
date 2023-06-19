@@ -1,12 +1,9 @@
 package it.unical.inf.ea.trintedapp.data.service;
 
 import java.util.Collection;
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
-import it.unical.inf.ea.trintedapp.data.entities.Indirizzo;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
 import it.unical.inf.ea.trintedapp.dto.UtenteCompletionDto;

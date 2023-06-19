@@ -1,5 +1,6 @@
 package it.unical.inf.ea.trintedapp.data.service;
 
+import it.unical.inf.ea.trintedapp.config.AppwriteConfig;
 import it.unical.inf.ea.trintedapp.data.dao.ArticoloDao;
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
 import it.unical.inf.ea.trintedapp.data.entities.Articolo;
@@ -9,7 +10,11 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import io.appwrite.coroutines.CoroutineCallback;
+import io.appwrite.models.Session;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -46,7 +51,8 @@ public class ArticoloServiceImpl implements ArticoloService {
 
     @Override
     public ArticoloDto getById(Long id) {
-        Articolo articolo = articoloDao.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
+        Articolo articolo = articoloDao.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
         return modelMapper.map(articolo, ArticoloDto.class);
     }
 
@@ -58,8 +64,17 @@ public class ArticoloServiceImpl implements ArticoloService {
     }
 
     @Override
-    public void delete(Long id) {
-        articoloDao.deleteById(id);
+    public HttpStatus delete(Long id, Session session) {
+        try {
+            Articolo articolo = articoloDao.findById(id).orElseThrow(
+                    () -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
+            if (articolo.getUtente().getCredenziali().getEmail().equals(session.getUserId()))
+                articoloDao.deleteById(id);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return HttpStatus.FORBIDDEN;
+        }
+        return HttpStatus.OK;
     }
 
     @Override
