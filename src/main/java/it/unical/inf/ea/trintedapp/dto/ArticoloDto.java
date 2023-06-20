@@ -28,4 +28,7 @@ public class ArticoloDto {
     private String categoria;
 
     private String condizioni;
+
+    private Boolean acquistabile;
+
 }
