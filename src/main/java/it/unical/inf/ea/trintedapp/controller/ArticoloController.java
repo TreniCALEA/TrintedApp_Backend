@@ -20,7 +20,7 @@ public class ArticoloController {
     private final ArticoloService articoloService;
 
     @PostMapping("/item")
-    public ResponseEntity<ArticoloDto> add(@RequestBody @Valid ArticoloDto articolo, @RequestBody Session session) {
+    public ResponseEntity<ArticoloDto> add(@RequestBody @Valid ArticoloDto articolo) {
         return ResponseEntity.ok(articoloService.save(articolo));
     }
 
