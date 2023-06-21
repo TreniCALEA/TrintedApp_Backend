@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class ArticoloController {
     }
 
     @DeleteMapping("/item/{idItem}")
-    public HttpStatus delete(@PathVariable("idItem") Long id, @RequestBody String sessionId) {
+    public CompletableFuture<HttpStatus> delete(@PathVariable("idItem") Long id, @RequestBody String sessionId) {
         return articoloService.delete(id, sessionId);
     }
 

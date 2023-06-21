@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 
 public interface ArticoloService {
     void save(Articolo articolo);
@@ -18,7 +19,7 @@ public interface ArticoloService {
 
     Collection<ArticoloDto> findAll();
 
-    HttpStatus delete(Long id, String sessionId);
+    CompletableFuture<HttpStatus> delete(Long id, String sessionId);
 
     Collection<ArticoloDto> getByTitoloContainingOrDescrizioneContaining(String titolo, String descrizione);
 
