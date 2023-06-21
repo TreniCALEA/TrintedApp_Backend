@@ -77,10 +77,10 @@ public class ArticoloServiceImpl implements ArticoloService {
                         if (articolo.getUtente().getId().equals(utente.getId()))
                             articoloDao.deleteById(id);
                     }));
+                    return HttpStatus.OK;
         } catch (AppwriteException e) {
             return HttpStatus.UNAUTHORIZED;
         }
-        return HttpStatus.OK;
     }
 
     @Override
