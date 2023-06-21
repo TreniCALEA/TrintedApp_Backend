@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import io.appwrite.coroutines.CoroutineCallback;
+import io.appwrite.exceptions.AppwriteException;
 import io.appwrite.models.Session;
 
 import java.util.Collection;
@@ -64,15 +65,20 @@ public class ArticoloServiceImpl implements ArticoloService {
     }
 
     @Override
-    public HttpStatus delete(Long id, Session session) {
+    public HttpStatus delete(Long id, String sessionId) {
         try {
-            Articolo articolo = articoloDao.findById(id).orElseThrow(
-                    () -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
-            if (articolo.getUtente().getCredenziali().getEmail().equals(session.getUserId()))
-                articoloDao.deleteById(id);
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-            return HttpStatus.FORBIDDEN;
+            AppwriteConfig.account.getSession(sessionId,
+                    new CoroutineCallback<>((response, error) -> {
+                        String email = response.getProviderUid();
+                        Utente utente = utenteDao.findByCredenzialiEmail(email).get();
+                        Articolo articolo = articoloDao.findById(id).orElseThrow(
+                                () -> new EntityNotFoundException(
+                                        String.format("Non esiste un articolo con id: [%s]", id)));
+                        if (articolo.getUtente().getId().equals(utente.getId()))
+                            articoloDao.deleteById(id);
+                    }));
+        } catch (AppwriteException e) {
+            return HttpStatus.UNAUTHORIZED;
         }
         return HttpStatus.OK;
     }

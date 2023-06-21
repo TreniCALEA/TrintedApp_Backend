@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import io.appwrite.models.Session;
-
 import java.util.Collection;
 
 @RestController
@@ -35,13 +33,15 @@ public class ArticoloController {
     }
 
     @DeleteMapping("/item/{idItem}")
-    public HttpStatus delete(@PathVariable("idItem") Long id, @RequestBody Session session) {
-        return articoloService.delete(id, session);
+    public HttpStatus delete(@PathVariable("idItem") Long id, @RequestBody String sessionId) {
+        return articoloService.delete(id, sessionId);
     }
 
     @GetMapping("/item/search/{searchValue}")
-    public ResponseEntity<Collection<ArticoloDto>> getByTitoloContainingOrDescrizioneContaining(@PathVariable("searchValue") String searchValue) {
-        return ResponseEntity.ok(articoloService.getByTitoloContainingOrDescrizioneContaining(searchValue, searchValue));
+    public ResponseEntity<Collection<ArticoloDto>> getByTitoloContainingOrDescrizioneContaining(
+            @PathVariable("searchValue") String searchValue) {
+        return ResponseEntity
+                .ok(articoloService.getByTitoloContainingOrDescrizioneContaining(searchValue, searchValue));
     }
 
 }
