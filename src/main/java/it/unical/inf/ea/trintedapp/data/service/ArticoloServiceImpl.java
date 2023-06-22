@@ -67,27 +67,26 @@ public class ArticoloServiceImpl implements ArticoloService {
 
     @Override
     public CompletableFuture<HttpStatus> delete(Long id, String sessionId) {
-    CompletableFuture<HttpStatus> status = new CompletableFuture<>();
+        CompletableFuture<HttpStatus> status = new CompletableFuture<>();
+        try {
+            AppwriteConfig.account.getSession(sessionId, new CoroutineCallback<>((response, error) -> {
+                String email = response.getProviderUid();
+                Utente utente = utenteDao.findByCredenzialiEmail(email).get();
+                Articolo articolo = articoloDao.findById(id).orElseThrow(
+                        () -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
 
-    try {
-        AppwriteConfig.account.getSession(sessionId, new CoroutineCallback<>((response, error) -> {
-            String email = response.getProviderUid();
-            Utente utente = utenteDao.findByCredenzialiEmail(email).get();
-            Articolo articolo = articoloDao.findById(id).orElseThrow(() ->
-                    new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
+                if (articolo.getUtente().getId().equals(utente.getId())) {
+                    articoloDao.deleteById(id);
+                    status.complete(HttpStatus.OK);
+                } else {
+                    status.complete(HttpStatus.UNAUTHORIZED);
+                }
+            }));
+        } catch (AppwriteException e) {
+        }
 
-            if (articolo.getUtente().getId().equals(utente.getId())) {
-                articoloDao.deleteById(id);
-                status.complete(HttpStatus.OK);
-            } else {
-                status.complete(HttpStatus.UNAUTHORIZED);
-            }
-        }));
-    } catch (AppwriteException e) {}
-
-    return status;
-}
-
+        return status;
+    }
 
     @Override
     public Collection<ArticoloDto> getByTitoloContainingOrDescrizioneContaining(String titolo, String descrizione) {

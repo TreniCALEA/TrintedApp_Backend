@@ -34,7 +34,7 @@ public class ArticoloController {
     }
 
     @DeleteMapping("/item/{idItem}")
-    public CompletableFuture<HttpStatus> delete(@PathVariable("idItem") Long id, @RequestBody String sessionId) {
+    public CompletableFuture<HttpStatus> delete(@PathVariable("idItem") Long id, @RequestParam String sessionId) {
         return articoloService.delete(id, sessionId);
     }
 
