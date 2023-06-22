@@ -70,22 +70,23 @@ public class ArticoloServiceImpl implements ArticoloService {
     public CompletableFuture<HttpStatus> delete(Long id, String jwt) {
         CompletableFuture<HttpStatus> status = new CompletableFuture<>();
 
-        Client client = new Client(AppwriteConfig.ENDPOINT)
-                            .setProject(AppwriteConfig.PROJECT_ID)
-                            .setJWT(jwt);
-
-        Account account = new Account(client);
-
-        System.out.println("jwt: " + jwt);
-
-        Articolo articolo = articoloDao.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
-
         try {
+            Client client = new Client(AppwriteConfig.ENDPOINT)
+                    .setProject(AppwriteConfig.PROJECT_ID)
+                    .setJWT(jwt);
+
+            Account account = new Account(client);
+
+            System.out.println("jwt: " + jwt);
+
+            Articolo articolo = articoloDao.findById(id).orElseThrow(
+                    () -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
             account.get(
                     new CoroutineCallback<>((response, error) -> {
                         System.out.println(response);
                         Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
+                        Long userId = utente.getId(), articoloUserId = articolo.getUtente().getId();
+                        System.out.println("userId: " + userId + ", articoloUserId: " + articoloUserId);
                         if (utente.getId() == articolo.getUtente().getId()) {
                             articoloDao.deleteById(id);
                             status.complete(HttpStatus.OK);
