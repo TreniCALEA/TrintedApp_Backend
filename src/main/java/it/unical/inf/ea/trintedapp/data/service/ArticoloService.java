@@ -19,7 +19,7 @@ public interface ArticoloService {
 
     Collection<ArticoloDto> findAll();
 
-    CompletableFuture<HttpStatus> delete(Long id, String sessionId);
+    CompletableFuture<HttpStatus> delete(Long id, String jwt);
 
     Collection<ArticoloDto> getByTitoloContainingOrDescrizioneContaining(String titolo, String descrizione);
 

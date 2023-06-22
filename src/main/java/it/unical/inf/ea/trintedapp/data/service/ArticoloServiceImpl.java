@@ -13,9 +13,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import io.appwrite.Client;
 import io.appwrite.coroutines.CoroutineCallback;
 import io.appwrite.exceptions.AppwriteException;
-import io.appwrite.models.Session;
+import io.appwrite.services.Account;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -66,25 +67,28 @@ public class ArticoloServiceImpl implements ArticoloService {
     }
 
     @Override
-    public CompletableFuture<HttpStatus> delete(Long id, String sessionId) {
+    public CompletableFuture<HttpStatus> delete(Long id, String jwt) {
         CompletableFuture<HttpStatus> status = new CompletableFuture<>();
+
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                            .setProject(AppwriteConfig.PROJECT_ID)
+                            .setJWT(jwt);
+
+        Account account = new Account(client);
+
         try {
-            AppwriteConfig.account.getSession(sessionId, new CoroutineCallback<>((response, error) -> {
-                String email = response.getProviderUid();
-                Utente utente = utenteDao.findByCredenzialiEmail(email).get();
-                Articolo articolo = articoloDao.findById(id).orElseThrow(
-                        () -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
-
-                if (articolo.getUtente().getId().equals(utente.getId())) {
-                    articoloDao.deleteById(id);
-                    status.complete(HttpStatus.OK);
-                } else {
-                    status.complete(HttpStatus.UNAUTHORIZED);
-                }
-            }));
+            account.get(
+                    new CoroutineCallback<>((response, error) -> {
+                        if (response != null) {
+                            articoloDao.deleteById(id);
+                            status.complete(HttpStatus.OK);
+                        } else {
+                            status.complete(HttpStatus.UNAUTHORIZED);
+                        }
+                    }));
         } catch (AppwriteException e) {
+            status.complete(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
         return status;
     }
 

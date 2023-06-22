@@ -14,9 +14,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import io.appwrite.Client;
 import io.appwrite.ID;
 import io.appwrite.coroutines.CoroutineCallback;
 import io.appwrite.exceptions.AppwriteException;
+import io.appwrite.services.Users;
 import it.unical.inf.ea.trintedapp.config.AppwriteConfig;
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
@@ -44,8 +46,15 @@ public class UtenteServiceImpl implements UtenteService {
     public UtenteRegistrationDto save(UtenteRegistrationDto utenteDto) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
         utenteDto.setCredenzialiPassword(passwordEncoder.encode(utenteDto.getCredenzialiPassword()));
+
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                            .setProject(AppwriteConfig.PROJECT_ID)
+                            .setKey(AppwriteConfig.API_KEY);
+
+        Users users = new Users(client);
+
         try {
-            AppwriteConfig.users.createBcryptUser(ID.Companion.unique(), utenteDto.getCredenzialiEmail(),
+            users.createBcryptUser(ID.Companion.unique(), utenteDto.getCredenzialiEmail(),
                     utenteDto.getCredenzialiPassword(),
                     utenteDto.getCredenzialiUsername(),
                     new CoroutineCallback<>((response, error) -> {
@@ -88,13 +97,20 @@ public class UtenteServiceImpl implements UtenteService {
     public void delete(Long id) {
         Utente utente = utenteDao.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
+
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                            .setProject(AppwriteConfig.PROJECT_ID)
+                            .setKey(AppwriteConfig.API_KEY);
+
+        Users users = new Users(client);
+
         try {
-            AppwriteConfig.users.list(
+            users.list(
                     new CoroutineCallback<>((response, error) -> {
                         response.getUsers().forEach(user -> {
                             if (user.getEmail().equals(utente.getCredenziali().getEmail())) {
                                 try {
-                                    AppwriteConfig.users.delete(user.getId(),
+                                    users.delete(user.getId(),
                                             new CoroutineCallback<>((response2, error2) -> {
                                                 if (error2 != null) {
                                                     error2.printStackTrace();
