@@ -76,10 +76,17 @@ public class ArticoloServiceImpl implements ArticoloService {
 
         Account account = new Account(client);
 
+        System.out.println("jwt: " + jwt);
+
+        Articolo articolo = articoloDao.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
+
         try {
             account.get(
                     new CoroutineCallback<>((response, error) -> {
-                        if (response != null) {
+                        System.out.println(response);
+                        Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
+                        if (utente.getId() == articolo.getUtente().getId()) {
                             articoloDao.deleteById(id);
                             status.complete(HttpStatus.OK);
                         } else {
