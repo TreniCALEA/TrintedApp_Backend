@@ -20,7 +20,6 @@ import io.appwrite.services.Account;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -37,14 +36,32 @@ public class ArticoloServiceImpl implements ArticoloService {
     }
 
     @Override
-    public ArticoloDto save(ArticoloDto articoloDto) {
+    public ArticoloDto save(ArticoloDto articoloDto, String jwt) {
+        CompletableFuture<ArticoloDto> res = new CompletableFuture<>();
+
         Articolo articolo = modelMapper.map(articoloDto, Articolo.class);
 
-        Optional<Utente> venditore = utenteDao.findById(articoloDto.getUtenteId());
-        articolo.setUtente(venditore.get());
+        Utente venditore = utenteDao.findById(articoloDto.getUtenteId()).get();
 
-        Articolo a = articoloDao.save(articolo);
-        return modelMapper.map(a, ArticoloDto.class);
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                .setProject(AppwriteConfig.PROJECT_ID)
+                .setJWT(jwt);
+
+        Account account = new Account(client);
+
+        try {
+            account.get(
+                new CoroutineCallback<>((response, error) -> {
+                    if (response.getEmail().equals(venditore.getCredenziali().getEmail()))
+                        res.complete(modelMapper.map(articolo, ArticoloDto.class));
+                    else res.complete(null);
+                })
+            );
+        } catch (Exception e) {
+            res.completeExceptionally(e);
+        }
+
+        return res.join();
     }
 
     @Override
@@ -70,17 +87,19 @@ public class ArticoloServiceImpl implements ArticoloService {
     public CompletableFuture<HttpStatus> delete(Long id, String jwt) {
         CompletableFuture<HttpStatus> status = new CompletableFuture<>();
 
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                .setProject(AppwriteConfig.PROJECT_ID)
+                .setJWT(jwt);
+
+        Account account = new Account(client);
+
+        System.out.println("jwt: " + jwt);
+
+        Articolo articolo = articoloDao.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
+
         try {
-            Client client = new Client(AppwriteConfig.ENDPOINT)
-                    .setProject(AppwriteConfig.PROJECT_ID)
-                    .setJWT(jwt);
 
-            Account account = new Account(client);
-
-            System.out.println("jwt: " + jwt);
-
-            Articolo articolo = articoloDao.findById(id).orElseThrow(
-                    () -> new EntityNotFoundException(String.format("Non esiste un articolo con id: [%s]", id)));
             account.get(
                     new CoroutineCallback<>((response, error) -> {
                         System.out.println(response);

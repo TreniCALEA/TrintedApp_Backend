@@ -3,6 +3,7 @@ package it.unical.inf.ea.trintedapp.data.service;
 import java.util.Collection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 
 import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import it.unical.inf.ea.trintedapp.dto.UtenteBasicDto;
@@ -22,7 +23,7 @@ public interface UtenteService {
 
     Collection<UtenteBasicDto> findAll();
 
-    void delete(Long id);
+    HttpStatus delete(Long id, String jwt);
 
     Collection<UtenteBasicDto> getAllByUsernameLike(String credenzialiUsername);
 
@@ -32,6 +33,6 @@ public interface UtenteService {
 
     UtenteDto getByCredenzialiEmail(String credenzialiEmail);
 
-    void update(Long id, UtenteCompletionDto utenteDto);
+    HttpStatus update(Long id, UtenteCompletionDto utenteDto, String jwt);
 
 }

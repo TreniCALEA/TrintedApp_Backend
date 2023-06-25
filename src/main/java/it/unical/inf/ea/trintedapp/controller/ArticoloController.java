@@ -19,8 +19,8 @@ public class ArticoloController {
     private final ArticoloService articoloService;
 
     @PostMapping("/item")
-    public ResponseEntity<ArticoloDto> add(@RequestBody @Valid ArticoloDto articolo) {
-        return ResponseEntity.ok(articoloService.save(articolo));
+    public ResponseEntity<ArticoloDto> add(@RequestBody @Valid ArticoloDto articolo, @RequestParam String jwt) {
+        return ResponseEntity.ok(articoloService.save(articolo, jwt));
     }
 
     @GetMapping("/item")

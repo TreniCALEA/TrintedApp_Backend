@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.unical.inf.ea.trintedapp.data.service.UtenteService;
@@ -32,9 +33,8 @@ public class UtenteController {
 
     @PostMapping("/users/{idUser}")
     public HttpStatus update(@PathVariable("idUser") Long id,
-            @RequestBody @Valid UtenteCompletionDto utente) {
-        utenteService.update(id, utente);
-        return HttpStatus.OK;
+            @RequestBody @Valid UtenteCompletionDto utente, @RequestParam String jwt) {
+        return utenteService.update(id, utente, jwt);
     }
 
     @PostMapping("/users")
@@ -54,9 +54,8 @@ public class UtenteController {
     }
 
     @DeleteMapping("/users/{idUser}")
-    public HttpStatus delete(@PathVariable("idUser") Long id) {
-        utenteService.delete(id);
-        return HttpStatus.OK;
+    public HttpStatus delete(@PathVariable("idUser") Long id, String jwt) {
+        return utenteService.delete(id, jwt);
     }
 
     @GetMapping("/users/all/{page}")

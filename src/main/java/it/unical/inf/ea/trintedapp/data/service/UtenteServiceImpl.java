@@ -2,22 +2,23 @@ package it.unical.inf.ea.trintedapp.data.service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import io.appwrite.Client;
 import io.appwrite.ID;
 import io.appwrite.coroutines.CoroutineCallback;
 import io.appwrite.exceptions.AppwriteException;
+import io.appwrite.services.Account;
 import io.appwrite.services.Users;
 import it.unical.inf.ea.trintedapp.config.AppwriteConfig;
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
@@ -48,8 +49,8 @@ public class UtenteServiceImpl implements UtenteService {
         utenteDto.setCredenzialiPassword(passwordEncoder.encode(utenteDto.getCredenzialiPassword()));
 
         Client client = new Client(AppwriteConfig.ENDPOINT)
-                            .setProject(AppwriteConfig.PROJECT_ID)
-                            .setKey(AppwriteConfig.API_KEY);
+                .setProject(AppwriteConfig.PROJECT_ID)
+                .setKey(AppwriteConfig.API_KEY);
 
         Users users = new Users(client);
 
@@ -94,38 +95,40 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public void delete(Long id) {
-        Utente utente = utenteDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
+    public HttpStatus delete(Long id, String jwt) {
+        CompletableFuture<HttpStatus> res = new CompletableFuture<>();
 
         Client client = new Client(AppwriteConfig.ENDPOINT)
-                            .setProject(AppwriteConfig.PROJECT_ID)
-                            .setKey(AppwriteConfig.API_KEY);
+                .setProject(AppwriteConfig.PROJECT_ID)
+                .setKey(AppwriteConfig.API_KEY)
+                .setJWT(jwt);
+
+        Account account = new Account(client);
 
         Users users = new Users(client);
 
         try {
-            users.list(
-                    new CoroutineCallback<>((response, error) -> {
-                        response.getUsers().forEach(user -> {
-                            if (user.getEmail().equals(utente.getCredenziali().getEmail())) {
-                                try {
-                                    users.delete(user.getId(),
-                                            new CoroutineCallback<>((response2, error2) -> {
-                                                if (error2 != null) {
-                                                    error2.printStackTrace();
-                                                }
-                                                System.out.println(response2);
-                                            }));
-                                } catch (AppwriteException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                    }));
+            account.get(
+                new CoroutineCallback<>((response, error) -> {
+                    Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
+                    if (utente.getId() == id || utente.getIsAdmin()) {
+                        utenteDao.deleteById(id);
+                        try {
+                            users.delete(response.getId(),
+                            new CoroutineCallback<>((resp, err) -> {
+                                System.out.println("Utente eliminato da Appwrite");
+                            })
+                        );
+                        } catch (Exception e) {}
+                        res.complete(HttpStatus.OK);
+                    }
+                    else res.complete(HttpStatus.UNAUTHORIZED);
+                })
+            );
         } catch (Exception e) {
+            res.completeExceptionally(e);
         }
-        utenteDao.deleteById(id);
+        return res.join();
     }
 
     private static final int SIZE_FOR_PAGE = 20;
@@ -163,18 +166,41 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public void update(Long id, UtenteCompletionDto UtenteCompletionDto) {
-        Utente utente = utenteDao.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Non esiste un utente con id: [%s]", id)));
-        utente.setNome(UtenteCompletionDto.getNome());
-        utente.setCognome(UtenteCompletionDto.getCognome());
-        if (UtenteCompletionDto.getImmagine() == null) {
-            utente.setImmagine(pfpImg);
-        } else {
-            utente.setImmagine(UtenteCompletionDto.getImmagine());
+    public HttpStatus update(Long id, UtenteCompletionDto UtenteCompletionDto, String jwt) {
+        CompletableFuture<HttpStatus> res = new CompletableFuture<>();
+
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                .setProject(AppwriteConfig.PROJECT_ID)
+                .setJWT(jwt);
+
+        Account account = new Account(client);
+
+        try {
+            account.get(
+                    new CoroutineCallback<>((response, error) -> {
+                        Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
+                        if (utente.getIsAdmin() || utente.getId() == id) {
+                            utente.setNome(
+                                    UtenteCompletionDto.getNome().isEmpty() ? null : UtenteCompletionDto.getNome());
+                            utente.setCognome(UtenteCompletionDto.getCognome().isEmpty() ? null
+                                    : UtenteCompletionDto.getCognome());
+                            if (UtenteCompletionDto.getImmagine() == null) {
+                                utente.setImmagine(pfpImg);
+                            } else {
+                                utente.setImmagine(UtenteCompletionDto.getImmagine());
+                            }
+                            utente.setIndirizzo(UtenteCompletionDto.getIndirizzo() == null ? null
+                                    : UtenteCompletionDto.getIndirizzo());
+                            utenteDao.save(utente);
+                            res.complete(HttpStatus.OK);
+                        } else
+                            res.complete(HttpStatus.FORBIDDEN);
+                    }));
+        } catch (Exception e) {
+            res.completeExceptionally(e);
         }
-        utente.setIndirizzo(UtenteCompletionDto.getIndirizzo());
-        utenteDao.save(utente);
+
+        return res.join();
     }
 
 }

@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 public interface ArticoloService {
     void save(Articolo articolo);
 
-    ArticoloDto save(ArticoloDto articoloDto);
+    ArticoloDto save(ArticoloDto articoloDto, String jwt);
 
     Collection<Articolo> findAll(Specification<Articolo> spec);
 
