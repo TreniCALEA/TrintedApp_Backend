@@ -1,6 +1,5 @@
 package it.unical.inf.ea.trintedapp.data.entities;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -12,8 +12,8 @@ import it.unical.inf.ea.trintedapp.data.entities.Utente;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OrdineDao extends JpaRepository<Ordine, Long>{
-    
+public interface OrdineDao extends JpaRepository<Ordine, Long> {
+
     Optional<Ordine> findAllByAcquirente(Long id);
 
     Optional<Ordine> findAllByVenditore(Long id);

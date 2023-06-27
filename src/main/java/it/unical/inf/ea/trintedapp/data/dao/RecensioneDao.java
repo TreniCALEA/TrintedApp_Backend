@@ -22,10 +22,11 @@ public interface RecensioneDao extends JpaRepository<Recensione, Long>, JpaSpeci
 
     List<Recensione> findAllByRating(Float rating);
 
-    default Specification<Recensione> recensioneDestinatario (Long id){
+    default Specification<Recensione> recensioneDestinatario(Long id) {
         return new Specification<Recensione>() {
             @Override
-            public Predicate toPredicate(Root<Recensione> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+            public Predicate toPredicate(Root<Recensione> root, CriteriaQuery<?> query,
+                    CriteriaBuilder criteriaBuilder) {
                 return criteriaBuilder.equal(root.get("destinatario").get("id"), id);
             }
         };

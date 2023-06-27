@@ -21,19 +21,18 @@ public class RecensioneController {
     private final RecensioneService recensioneService;
 
     @PostMapping("/review")
-    public ResponseEntity<RecensioneDto> add(@RequestBody @Valid RecensioneDto review) {
-        return ResponseEntity.ok(recensioneService.save(review));
+    public HttpStatus add(@RequestBody @Valid RecensioneDto review, @RequestParam String jwt) {
+        return recensioneService.save(review, jwt);
     }
 
     @GetMapping("/review/{reviewId}")
-    public ResponseEntity<List<Recensione>> findAll(@PathVariable("reviewId") Long id){
+    public ResponseEntity<List<Recensione>> findAll(@PathVariable("reviewId") Long id) {
         return ResponseEntity.ok(recensioneService.findAll(id));
     }
 
     @DeleteMapping("/review/{reviewId}")
-    public HttpStatus delete(@PathVariable("reviewId") Long id){
-        recensioneService.delete(id);
-        return HttpStatus.OK;
+    public HttpStatus delete(@PathVariable("reviewId") Long id, @RequestParam String jwt) {
+        return recensioneService.delete(id, jwt);
     }
 
     @GetMapping("/review/all/{review}")

@@ -46,18 +46,18 @@ public class OrdineController {
     }
 
     @PostMapping("/orders/{acquirente}/{articoloId}")
-    public HttpStatus add(@PathVariable ("acquirente") Long acquirente, @PathVariable ("articoloId") Long articoloId, @RequestBody Indirizzo indirizzo) {
-        ordineService.confirmOrder(acquirente, articoloId, indirizzo);
-        return HttpStatus.OK;
+    public HttpStatus add(@PathVariable("acquirente") Long acquirente, @PathVariable("articoloId") Long articoloId,
+            @RequestBody Indirizzo indirizzo, @RequestParam String jwt) {
+        return ordineService.confirmOrder(acquirente, articoloId, indirizzo, jwt);
     }
 
     @GetMapping("/seller")
-    public ResponseEntity<List<OrdineDto>> getByVenditore(@RequestParam Long id){
+    public ResponseEntity<List<OrdineDto>> getByVenditore(@RequestParam Long id) {
         return ResponseEntity.ok(ordineService.getByVenditore(id));
     }
 
     @GetMapping("/buyer")
-    public ResponseEntity<List<OrdineDto>> getByAcquirente(@RequestParam Long id){
+    public ResponseEntity<List<OrdineDto>> getByAcquirente(@RequestParam Long id) {
         return ResponseEntity.ok(ordineService.getByAcquirente(id));
     }
 }

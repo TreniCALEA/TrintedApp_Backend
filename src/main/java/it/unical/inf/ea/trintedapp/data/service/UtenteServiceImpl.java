@@ -109,24 +109,23 @@ public class UtenteServiceImpl implements UtenteService {
 
         try {
             account.get(
-                new CoroutineCallback<>((response, error) -> {
-                    Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
-                    if (utente.getId() == id || utente.getIsAdmin()) {
-                        utenteDao.deleteById(id);
-                        try {
-                            users.delete(response.getId(),
-                            new CoroutineCallback<>((resp, err) -> {
-                                System.out.println("Utente eliminato da Appwrite");
-                            })
-                        );
-                        } catch (Exception e) {}
-                        res.complete(HttpStatus.OK);
-                    }
-                    else res.complete(HttpStatus.UNAUTHORIZED);
-                })
-            );
+                    new CoroutineCallback<>((response, error) -> {
+                        Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
+                        if (utente.getId() == id || utente.getIsAdmin()) {
+                            utenteDao.deleteById(id);
+                            try {
+                                users.delete(response.getId(),
+                                        new CoroutineCallback<>((resp, err) -> {
+                                            System.out.println("Utente eliminato da Appwrite");
+                                        }));
+                            } catch (Exception e) {
+                            }
+                            res.complete(HttpStatus.OK);
+                        } else
+                            res.complete(HttpStatus.UNAUTHORIZED);
+                    }));
         } catch (Exception e) {
-            res.completeExceptionally(e);
+            res.complete(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return res.join();
     }
@@ -197,7 +196,7 @@ public class UtenteServiceImpl implements UtenteService {
                             res.complete(HttpStatus.FORBIDDEN);
                     }));
         } catch (Exception e) {
-            res.completeExceptionally(e);
+            res.complete(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return res.join();

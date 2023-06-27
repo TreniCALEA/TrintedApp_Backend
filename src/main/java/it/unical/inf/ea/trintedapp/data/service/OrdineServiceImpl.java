@@ -3,11 +3,17 @@ package it.unical.inf.ea.trintedapp.data.service;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import io.appwrite.Client;
+import io.appwrite.coroutines.CoroutineCallback;
+import io.appwrite.services.Account;
+import it.unical.inf.ea.trintedapp.config.AppwriteConfig;
 import it.unical.inf.ea.trintedapp.data.dao.ArticoloDao;
 import it.unical.inf.ea.trintedapp.data.dao.OrdineDao;
 import it.unical.inf.ea.trintedapp.data.dao.UtenteDao;
@@ -77,24 +83,46 @@ public class OrdineServiceImpl implements OrdineService {
 
     @Override
     @Transactional
-    public void confirmOrder(Long acquirente, Long articoloId, Indirizzo indirizzo) {
+    public HttpStatus confirmOrder(Long acquirente, Long articoloId, Indirizzo indirizzo, String jwt) {
+        CompletableFuture<HttpStatus> status = new CompletableFuture<>();
+
         Articolo _articolo = articoloDao.findById(articoloId).get();
 
         Utente _acquirente = utenteDao.findById(acquirente).get();
         Utente _venditore = utenteDao.findById(_articolo.getUtente().getId()).get();
 
-        // create a new order in Ordine
-        Ordine nuovoOrdine = new Ordine();
-        nuovoOrdine.setAcquirente(_acquirente);
-        nuovoOrdine.setVenditore(_venditore);
-        nuovoOrdine.setArticolo(_articolo);
-        nuovoOrdine.setDataAcquisto(LocalDate.now());
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                .setProject(AppwriteConfig.PROJECT_ID)
+                .setJWT(jwt);
 
-        nuovoOrdine.setIndirizzo(indirizzo);
-        ordineDao.save(nuovoOrdine);
+        Account account = new Account(client);
 
-        // update Articolo
-        _articolo.setAcquistabile(false);
-        articoloDao.save(_articolo);
+        try {
+            account.get(
+                    new CoroutineCallback<>((response, error) -> {
+                        if (response.getEmail().equals(_acquirente.getCredenziali().getEmail())) {
+                            // create a new order in Ordine
+                            Ordine nuovoOrdine = new Ordine();
+                            nuovoOrdine.setAcquirente(_acquirente);
+                            nuovoOrdine.setVenditore(_venditore);
+                            nuovoOrdine.setArticolo(_articolo);
+                            nuovoOrdine.setDataAcquisto(LocalDate.now());
+
+                            nuovoOrdine.setIndirizzo(indirizzo);
+                            ordineDao.save(nuovoOrdine);
+
+                            // update Articolo
+                            _articolo.setAcquistabile(false);
+                            articoloDao.save(_articolo);
+                            status.complete(HttpStatus.OK);
+                        } else {
+                            status.complete(HttpStatus.UNAUTHORIZED);
+                        }
+                    }));
+        } catch (Exception e) {
+            status.complete(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return status.join();
     }
 }

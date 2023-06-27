@@ -51,12 +51,12 @@ public class ArticoloServiceImpl implements ArticoloService {
 
         try {
             account.get(
-                new CoroutineCallback<>((response, error) -> {
-                    if (response.getEmail().equals(venditore.getCredenziali().getEmail()))
-                        res.complete(modelMapper.map(articolo, ArticoloDto.class));
-                    else res.complete(null);
-                })
-            );
+                    new CoroutineCallback<>((response, error) -> {
+                        if (response.getEmail().equals(venditore.getCredenziali().getEmail()))
+                            res.complete(modelMapper.map(articolo, ArticoloDto.class));
+                        else
+                            res.complete(null);
+                    }));
         } catch (Exception e) {
             res.completeExceptionally(e);
         }
@@ -106,7 +106,7 @@ public class ArticoloServiceImpl implements ArticoloService {
                         Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
                         Long userId = utente.getId(), articoloUserId = articolo.getUtente().getId();
                         System.out.println("userId: " + userId + ", articoloUserId: " + articoloUserId);
-                        if (utente.getId() == articolo.getUtente().getId()) {
+                        if (utente.getId() == articolo.getUtente().getId() || utente.getIsAdmin()) {
                             articoloDao.deleteById(id);
                             status.complete(HttpStatus.OK);
                         } else {

@@ -3,6 +3,7 @@ package it.unical.inf.ea.trintedapp.data.service;
 import it.unical.inf.ea.trintedapp.data.entities.Recensione;
 import it.unical.inf.ea.trintedapp.dto.RecensioneDto;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +12,7 @@ public interface RecensioneService {
 
     void save(Recensione recensione);
 
-    RecensioneDto save(RecensioneDto recensionedDto);
+    HttpStatus save(RecensioneDto recensionedDto, String jwt);
 
     List<Recensione> findAll(Long id);
 
@@ -19,7 +20,7 @@ public interface RecensioneService {
 
     Collection<RecensioneDto> findAll();
 
-    void delete(Long id);
+    HttpStatus delete(Long id, String jwt);
 
     Page<RecensioneDto> getAllPaged(int page);
 }

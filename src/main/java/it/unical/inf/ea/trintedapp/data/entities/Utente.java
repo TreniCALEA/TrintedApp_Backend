@@ -30,60 +30,60 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Utente {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "id")
+        private Long id;
 
-    @Column(name = "nome")
-    private String nome;
+        @Column(name = "nome")
+        private String nome;
 
-    @Column(name = "cognome")
-    private String cognome;
+        @Column(name = "cognome")
+        private String cognome;
 
-    @Lob
-    @Column(name = "immagineProfilo")
-    private String immagine;
+        @Lob
+        @Column(name = "immagineProfilo")
+        private String immagine;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "via", column = @Column(name = "via_utente")),
-            @AttributeOverride(name = "numero_civico", column = @Column(name = "numeroCivico_utente")),
-            @AttributeOverride(name = "citta", column = @Column(name = "citta_utente"))
-    })
-    private Indirizzo indirizzo;
+        @Embedded
+        @AttributeOverrides({
+                        @AttributeOverride(name = "via", column = @Column(name = "via_utente")),
+                        @AttributeOverride(name = "numero_civico", column = @Column(name = "numeroCivico_utente")),
+                        @AttributeOverride(name = "citta", column = @Column(name = "citta_utente"))
+        })
+        private Indirizzo indirizzo;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "autore", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Recensione> recensioniRicevute;
+        @JsonManagedReference
+        @OneToMany(mappedBy = "autore", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+        private List<Recensione> recensioniRicevute;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Articolo> articoli;
+        @JsonManagedReference
+        @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+        private List<Articolo> articoli;
 
-    @Column(name = "preferiti")
-    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    @JoinTable(name = "preferiti_utente", joinColumns = @JoinColumn(name = "utente_id"), inverseJoinColumns = @JoinColumn(name = "articolo_id"))
-    private Set<Articolo> preferiti;
+        @Column(name = "preferiti")
+        @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+        @JoinTable(name = "preferiti_utente", joinColumns = @JoinColumn(name = "utente_id"), inverseJoinColumns = @JoinColumn(name = "articolo_id"))
+        private Set<Articolo> preferiti;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "username", column = @Column(name = "username", unique = true)),
-            @AttributeOverride(name = "password", column = @Column(name = "password")),
-            @AttributeOverride(name = "email", column = @Column(name = "email"))
-    })
-    private Credenziali credenziali;
+        @Embedded
+        @AttributeOverrides({
+                        @AttributeOverride(name = "username", column = @Column(name = "username", unique = true)),
+                        @AttributeOverride(name = "password", column = @Column(name = "password")),
+                        @AttributeOverride(name = "email", column = @Column(name = "email"))
+        })
+        private Credenziali credenziali;
 
-    @Column(name = "isAdmin")
-    private Boolean isAdmin;
+        @Column(name = "isAdmin")
+        private Boolean isAdmin;
 
-    @OneToMany(mappedBy = "acquirente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private List<Ordine> ordiniUtente;
+        @OneToMany(mappedBy = "acquirente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+        private List<Ordine> ordiniUtente;
 
-    @Column(name = "saldo")
-    private Double saldo;
+        @Column(name = "saldo")
+        private Double saldo;
 
-    @Column(name = "rating_genrale")
-    private Float ratingGenerale;
+        @Column(name = "rating_genrale")
+        private Float ratingGenerale;
 
 }
