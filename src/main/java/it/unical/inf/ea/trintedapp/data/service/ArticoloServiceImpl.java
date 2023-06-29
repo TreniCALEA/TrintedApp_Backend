@@ -52,8 +52,10 @@ public class ArticoloServiceImpl implements ArticoloService {
         try {
             account.get(
                     new CoroutineCallback<>((response, error) -> {
-                        if (response.getEmail().equals(venditore.getCredenziali().getEmail()))
+                        if (response.getEmail().equals(venditore.getCredenziali().getEmail())) {
+                            articoloDao.save(articolo);
                             res.complete(modelMapper.map(articolo, ArticoloDto.class));
+                        }
                         else
                             res.complete(null);
                     }));

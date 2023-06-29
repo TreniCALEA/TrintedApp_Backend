@@ -165,7 +165,7 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public HttpStatus update(Long id, UtenteCompletionDto UtenteCompletionDto, String jwt) {
+    public HttpStatus update(Long id, UtenteCompletionDto utenteCompletionDto, String jwt) {
         CompletableFuture<HttpStatus> res = new CompletableFuture<>();
 
         Client client = new Client(AppwriteConfig.ENDPOINT)
@@ -178,18 +178,21 @@ public class UtenteServiceImpl implements UtenteService {
             account.get(
                     new CoroutineCallback<>((response, error) -> {
                         Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
-                        if (utente.getIsAdmin() || utente.getId() == id) {
+                        if (utente.getId() == id) {
                             utente.setNome(
-                                    UtenteCompletionDto.getNome().isEmpty() ? null : UtenteCompletionDto.getNome());
-                            utente.setCognome(UtenteCompletionDto.getCognome().isEmpty() ? null
-                                    : UtenteCompletionDto.getCognome());
-                            if (UtenteCompletionDto.getImmagine() == null) {
-                                utente.setImmagine(pfpImg);
-                            } else {
-                                utente.setImmagine(UtenteCompletionDto.getImmagine());
-                            }
-                            utente.setIndirizzo(UtenteCompletionDto.getIndirizzo() == null ? null
-                                    : UtenteCompletionDto.getIndirizzo());
+                                    utenteCompletionDto.getNome().isEmpty() ? null : utenteCompletionDto.getNome());
+
+                            utente.setCognome(utenteCompletionDto.getCognome().isEmpty() ? null
+                                    : utenteCompletionDto.getCognome());
+
+                            if (utenteCompletionDto.getImmagine() == null) utente.setImmagine(pfpImg);
+                            else utente.setImmagine(utenteCompletionDto.getImmagine());
+
+                            if (!utenteCompletionDto.getIndirizzo().getCitta().isEmpty()
+                                    && !utenteCompletionDto.getIndirizzo().getVia().isEmpty()
+                                    && utenteCompletionDto.getIndirizzo().getNumeroCivico() != 0)
+                                utente.setIndirizzo(utenteCompletionDto.getIndirizzo());
+
                             utenteDao.save(utente);
                             res.complete(HttpStatus.OK);
                         } else
