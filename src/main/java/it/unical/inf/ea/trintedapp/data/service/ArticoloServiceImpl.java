@@ -18,6 +18,7 @@ import io.appwrite.coroutines.CoroutineCallback;
 import io.appwrite.exceptions.AppwriteException;
 import io.appwrite.services.Account;
 
+import java.util.Base64;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import java.util.concurrent.CompletableFuture;
@@ -36,7 +37,9 @@ public class ArticoloServiceImpl implements ArticoloService {
     }
 
     @Override
-    public ArticoloDto save(ArticoloDto articoloDto, String jwt) {
+    public ArticoloDto save(ArticoloDto articoloDto, String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
+
         CompletableFuture<ArticoloDto> res = new CompletableFuture<>();
 
         Articolo articolo = modelMapper.map(articoloDto, Articolo.class);
@@ -86,7 +89,9 @@ public class ArticoloServiceImpl implements ArticoloService {
     }
 
     @Override
-    public CompletableFuture<HttpStatus> delete(Long id, String jwt) {
+    public CompletableFuture<HttpStatus> delete(Long id, String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
+
         CompletableFuture<HttpStatus> status = new CompletableFuture<>();
 
         Client client = new Client(AppwriteConfig.ENDPOINT)

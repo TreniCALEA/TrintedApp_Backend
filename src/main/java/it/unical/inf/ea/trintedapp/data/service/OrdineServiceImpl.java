@@ -1,6 +1,7 @@
 package it.unical.inf.ea.trintedapp.data.service;
 
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -83,7 +84,9 @@ public class OrdineServiceImpl implements OrdineService {
 
     @Override
     @Transactional
-    public HttpStatus confirmOrder(Long acquirente, Long articoloId, Indirizzo indirizzo, String jwt) {
+    public HttpStatus confirmOrder(Long acquirente, Long articoloId, Indirizzo indirizzo, String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
+
         CompletableFuture<HttpStatus> status = new CompletableFuture<>();
 
         Articolo _articolo = articoloDao.findById(articoloId).get();

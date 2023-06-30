@@ -1,5 +1,6 @@
 package it.unical.inf.ea.trintedapp.data.service;
 
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -95,7 +96,9 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public HttpStatus delete(Long id, String jwt) {
+    public HttpStatus delete(Long id, String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
+
         CompletableFuture<HttpStatus> res = new CompletableFuture<>();
 
         Client client = new Client(AppwriteConfig.ENDPOINT)
@@ -165,7 +168,9 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
-    public HttpStatus update(Long id, UtenteCompletionDto utenteCompletionDto, String jwt) {
+    public HttpStatus update(Long id, UtenteCompletionDto utenteCompletionDto, String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
+
         CompletableFuture<HttpStatus> res = new CompletableFuture<>();
 
         Client client = new Client(AppwriteConfig.ENDPOINT)

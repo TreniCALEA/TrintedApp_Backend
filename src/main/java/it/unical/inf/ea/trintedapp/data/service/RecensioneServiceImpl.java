@@ -21,9 +21,9 @@ import io.appwrite.Client;
 import io.appwrite.coroutines.CoroutineCallback;
 import io.appwrite.services.Account;
 
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -62,7 +62,8 @@ public class RecensioneServiceImpl implements RecensioneService {
     }
 
     @Override
-    public HttpStatus delete(Long id, String jwt) {
+    public HttpStatus delete(Long id, String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
 
         CompletableFuture<HttpStatus> status = new CompletableFuture<>();
 
@@ -121,7 +122,9 @@ public class RecensioneServiceImpl implements RecensioneService {
     }
 
     @Override
-    public HttpStatus save(RecensioneDto recensioneDto, String jwt) {
+    public HttpStatus save(RecensioneDto recensioneDto, String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
+
         CompletableFuture<HttpStatus> status = new CompletableFuture<>();
 
         Client client = new Client(AppwriteConfig.ENDPOINT)
@@ -133,36 +136,34 @@ public class RecensioneServiceImpl implements RecensioneService {
         Recensione recensione = modelMapper.map(recensioneDto, Recensione.class);
 
         // Get the Utente objects based on the email
-        Optional<Utente> autoreOptional = utenteDao.findByCredenzialiEmail(recensioneDto.getAutoreCredenzialiEmail());
-        Optional<Utente> destinatarioOptional = utenteDao
-                .findByCredenzialiEmail(recensioneDto.getDestinatarioCredenzialiEmail());
+        Utente autore = utenteDao.findByCredenzialiEmail(recensioneDto.getAutoreCredenzialiEmail()).get();
+        Utente destinatario = utenteDao.findByCredenzialiEmail(recensioneDto.getDestinatarioCredenzialiEmail()).get();
 
         try {
 
             account.get(
                     new CoroutineCallback<>((response, error) -> {
-                        if (response.getEmail().equals(destinatarioOptional.get().getCredenziali().getEmail())) {
-                            if (autoreOptional.isPresent() && destinatarioOptional.isPresent()) {
-                                Utente autore = autoreOptional.get();
-                                Utente destinatario = destinatarioOptional.get();
+                        if (response.getEmail().equals(autore.getCredenziali().getEmail())) {
 
-                                // Set the Utente objects as the autore and destinatario
-                                recensione.setAutore(autore);
-                                recensione.setDestinatario(destinatario);
+                            // Set the Utente objects as the autore and destinatario
+                            recensione.setAutore(autore);
+                            recensione.setDestinatario(destinatario);
 
-                                // Update rating accordingly
-                                List<Recensione> recensioni = findAll(destinatario.getId());
-                                if (!recensioni.isEmpty()) {
-                                    float sum = 0;
-                                    for (Recensione r : recensioni) {
-                                        sum += r.getRating();
-                                    }
-                                    destinatario.setRatingGenerale(sum / recensioni.size());
-                                } else {
-                                    destinatario.setRatingGenerale(recensione.getRating());
+                            recensioneDao.save(recensione);
+
+                            // Update rating accordingly
+                            List<Recensione> recensioni = findAll(destinatario.getId());
+                            if (!recensioni.isEmpty()) {
+                                float sum = 0;
+                                for (Recensione r : recensioni) {
+                                    sum += r.getRating();
                                 }
-                                utenteDao.save(destinatario);
+                                destinatario.setRatingGenerale(sum / recensioni.size());
+                            } else {
+                                destinatario.setRatingGenerale(recensione.getRating());
                             }
+                            utenteDao.save(destinatario);
+                            status.complete(HttpStatus.OK);
                         } else {
                             status.complete(HttpStatus.FORBIDDEN);
                         }
