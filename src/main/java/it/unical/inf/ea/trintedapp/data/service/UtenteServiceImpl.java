@@ -188,10 +188,9 @@ public class UtenteServiceImpl implements UtenteService {
                             if (utenteCompletionDto.getImmagine() == null) utente.setImmagine(pfpImg);
                             else utente.setImmagine(utenteCompletionDto.getImmagine());
 
-                            if (!utenteCompletionDto.getIndirizzo().getCitta().isEmpty()
-                                    && !utenteCompletionDto.getIndirizzo().getVia().isEmpty()
-                                    && utenteCompletionDto.getIndirizzo().getNumeroCivico() != 0)
+                            if (utenteCompletionDto.getIndirizzo() != null)
                                 utente.setIndirizzo(utenteCompletionDto.getIndirizzo());
+                            else utente.setIndirizzo(null);
 
                             utenteDao.save(utente);
                             res.complete(HttpStatus.OK);
