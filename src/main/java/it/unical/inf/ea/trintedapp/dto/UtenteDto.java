@@ -27,6 +27,8 @@ public class UtenteDto {
 
     private Boolean isAdmin;
 
+    private Boolean isOwner;
+
     private Float ratingGenerale;
 
     private String immagine;
