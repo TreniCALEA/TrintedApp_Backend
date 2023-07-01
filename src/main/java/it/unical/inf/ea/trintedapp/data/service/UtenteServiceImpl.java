@@ -72,6 +72,8 @@ public class UtenteServiceImpl implements UtenteService {
         }
         Utente utente = modelMapper.map(utenteDto, Utente.class);
         utente.setImmagine(pfpImg);
+        utente.setIsAdmin(false);
+        utente.setIsOwner(false);
 
         Utente u = utenteDao.save(utente);
         return modelMapper.map(u, UtenteRegistrationDto.class);
