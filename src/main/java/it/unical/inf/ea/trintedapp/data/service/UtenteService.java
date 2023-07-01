@@ -35,4 +35,10 @@ public interface UtenteService {
 
     HttpStatus update(Long id, UtenteCompletionDto utenteDto, String jwt);
 
+    HttpStatus makeAdmin(Long id, String jwt);
+
+    HttpStatus revokeAdmin(Long id, String jwt);
+
+    HttpStatus banUser(Long id, String jwt);
+
 }

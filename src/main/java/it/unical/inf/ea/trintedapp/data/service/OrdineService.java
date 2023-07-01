@@ -17,14 +17,14 @@ public interface OrdineService {
 
     OrdineDto getById(Long id);
 
-    Collection<OrdineDto> findAll();
+    Collection<OrdineDto> findAll(String jwt);
 
-    void delete(Long id);
+    HttpStatus delete(Long id, String jwt);
 
     HttpStatus confirmOrder(Long acquirente, Long articoloId, Indirizzo indirizzo, String jwt);
 
-    List<OrdineDto> getByAcquirente(Long id);
+    List<OrdineDto> getByAcquirente(Long id, String jwt);
 
-    List<OrdineDto> getByVenditore(Long id);
+    List<OrdineDto> getByVenditore(Long id, String jwt);
 
 }

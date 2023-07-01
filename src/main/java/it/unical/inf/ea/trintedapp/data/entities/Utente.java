@@ -80,8 +80,8 @@ public class Utente {
         @OneToMany(mappedBy = "acquirente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
         private List<Ordine> ordiniUtente;
 
-        @Column(name = "saldo")
-        private Double saldo;
+        @Column(name = "isOwner")
+        private Boolean isOwner;
 
         @Column(name = "rating_genrale")
         private Float ratingGenerale;

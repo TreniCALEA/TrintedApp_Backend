@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +25,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@RequestMapping("/user-api/")
+@RequestMapping("/user-api")
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UtenteController {
@@ -54,8 +55,23 @@ public class UtenteController {
     }
 
     @DeleteMapping("/users/{idUser}")
-    public HttpStatus delete(@PathVariable("idUser") Long id, String jwt) {
+    public HttpStatus delete(@PathVariable("idUser") Long id, @RequestParam String jwt) {
         return utenteService.delete(id, jwt);
+    }
+
+    @PatchMapping("/users/makeAdmin/{idUser}")
+    public HttpStatus makeAdmin(@PathVariable("idUser") Long id, @RequestParam String jwt) {
+        return utenteService.makeAdmin(id, jwt);
+    }
+
+    @PatchMapping("/users/revokeAdmin/{idUser}")
+    public HttpStatus revokeAdmin(@PathVariable("idUser") Long id, @RequestParam String jwt) {
+        return utenteService.revokeAdmin(id, jwt);
+    }
+
+    @PostMapping("/users/banUser/{idUser}")
+    public HttpStatus banUser(@PathVariable("idUser") Long id, @RequestParam String jwt) {
+        return utenteService.banUser(id, jwt);
     }
 
     @GetMapping("/users/all/{page}")

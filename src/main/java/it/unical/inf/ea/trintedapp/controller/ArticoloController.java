@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/item-api/")
+@RequestMapping("/item-api")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ArticoloController {
     private final ArticoloService articoloService;

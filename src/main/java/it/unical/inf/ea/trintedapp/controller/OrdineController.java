@@ -21,7 +21,7 @@ import it.unical.inf.ea.trintedapp.dto.OrdineDto;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/order-api/")
+@RequestMapping("/order-api")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 public class OrdineController {
@@ -29,8 +29,8 @@ public class OrdineController {
     private final OrdineService ordineService;
 
     @GetMapping("/orders")
-    public ResponseEntity<Collection<OrdineDto>> all() {
-        return ResponseEntity.ok(ordineService.findAll());
+    public ResponseEntity<Collection<OrdineDto>> all(String jwt) {
+        return ResponseEntity.ok(ordineService.findAll(jwt));
     }
 
     @GetMapping("/orders/{orderId}")
@@ -40,9 +40,8 @@ public class OrdineController {
     }
 
     @DeleteMapping("/orders/{orderId}")
-    public HttpStatus delete(@PathVariable("orderId") Long id) {
-        ordineService.delete(id);
-        return HttpStatus.OK;
+    public HttpStatus delete(@PathVariable("orderId") Long id, @RequestParam String jwt) {
+        return ordineService.delete(id, jwt);
     }
 
     @PostMapping("/orders/{acquirente}/{articoloId}")
@@ -52,12 +51,12 @@ public class OrdineController {
     }
 
     @GetMapping("/seller")
-    public ResponseEntity<List<OrdineDto>> getByVenditore(@RequestParam Long id) {
-        return ResponseEntity.ok(ordineService.getByVenditore(id));
+    public ResponseEntity<List<OrdineDto>> getByVenditore(@RequestParam Long id, @RequestParam String jwt) {
+        return ResponseEntity.ok(ordineService.getByVenditore(id, jwt));
     }
 
     @GetMapping("/buyer")
-    public ResponseEntity<List<OrdineDto>> getByAcquirente(@RequestParam Long id) {
-        return ResponseEntity.ok(ordineService.getByAcquirente(id));
+    public ResponseEntity<List<OrdineDto>> getByAcquirente(@RequestParam Long id, @RequestParam String jwt) {
+        return ResponseEntity.ok(ordineService.getByAcquirente(id, jwt));
     }
 }

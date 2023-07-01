@@ -57,29 +57,130 @@ public class OrdineServiceImpl implements OrdineService {
     }
 
     @Override
-    public List<OrdineDto> getByAcquirente(Long id) {
-        return ordineDao.findAllByAcquirente(id).stream()
-                .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
-                .collect(Collectors.toList());
+    public List<OrdineDto> getByAcquirente(Long id, String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
+
+        CompletableFuture<List<OrdineDto>> vendite = new CompletableFuture<>();
+
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                .setProject(AppwriteConfig.PROJECT_ID)
+                .setJWT(jwt);
+
+        Account account = new Account(client);
+
+        try {
+            account.get(
+                new CoroutineCallback<>((response, error) -> {
+                    Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
+                    if (utente.getId() == id || utente.getIsAdmin()) {
+                        vendite.complete(ordineDao.findAllByAcquirente(id).stream()
+                                .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
+                                .collect(Collectors.toList()));
+                    } else {
+                        vendite.completeExceptionally(new Exception("Non sei autorizzato a visualizzare questi ordini"));
+                    }
+                })
+            );
+        } catch (Exception e) {
+            vendite.completeExceptionally(e);
+        }
+
+        return vendite.join();
     }
 
     @Override
-    public List<OrdineDto> getByVenditore(Long id) {
-        return ordineDao.findAllByVenditore(id).stream()
-                .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
-                .collect(Collectors.toList());
+    public List<OrdineDto> getByVenditore(Long id, String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
+
+        CompletableFuture<List<OrdineDto>> acquisti = new CompletableFuture<>();
+
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                .setProject(AppwriteConfig.PROJECT_ID)
+                .setJWT(jwt);
+
+        Account account = new Account(client);
+
+        try {
+            account.get(
+                new CoroutineCallback<>((response, error) -> {
+                    Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
+                    if (utente.getId() == id || utente.getIsAdmin()) {
+                        acquisti.complete(ordineDao.findAllByVenditore(id).stream()
+                                .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
+                                .collect(Collectors.toList()));
+                    } else {
+                        acquisti.completeExceptionally(new Exception("Non sei autorizzato a visualizzare questi ordini"));
+                    }
+                })
+            );
+        } catch (Exception e) {
+            acquisti.completeExceptionally(e);
+        }
+
+        return acquisti.join();
     }
 
     @Override
-    public Collection<OrdineDto> findAll() {
-        return ordineDao.findAll().stream()
-                .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
-                .collect(Collectors.toList());
+    public Collection<OrdineDto> findAll(String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
+
+        CompletableFuture<List<OrdineDto>> ordini = new CompletableFuture<>();
+
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                .setProject(AppwriteConfig.PROJECT_ID)
+                .setJWT(jwt);
+
+        Account account = new Account(client);
+
+        try {
+            account.get(
+                new CoroutineCallback<>((response, error) -> {
+                    Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
+                    if (utente.getIsAdmin()) {
+                        ordini.complete(ordineDao.findAll().stream()
+                                .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
+                                .collect(Collectors.toList()));
+                    } else {
+                        ordini.completeExceptionally(new Exception("Non sei autorizzato a visualizzare questi ordini"));
+                    }
+                })
+            );
+        } catch (Exception e) {
+            ordini.completeExceptionally(e);
+        }
+
+        return ordini.join();
     }
 
     @Override
-    public void delete(Long id) {
-        ordineDao.deleteById(id);
+    public HttpStatus delete(Long id, String encodedJwt) {
+        String jwt = new String(Base64.getDecoder().decode(encodedJwt));
+
+        CompletableFuture<HttpStatus> status = new CompletableFuture<>();
+
+        Client client = new Client(AppwriteConfig.ENDPOINT)
+                .setProject(AppwriteConfig.PROJECT_ID)
+                .setJWT(jwt);
+
+        Account account = new Account(client);
+
+        try {
+            account.get(
+                new CoroutineCallback<>((response, error) -> {
+                    Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
+                    if (utente.getIsAdmin()) {
+                        ordineDao.deleteById(id);
+                        status.complete(HttpStatus.OK);
+                    } else {
+                        status.complete(HttpStatus.UNAUTHORIZED);
+                    }
+                })
+            );
+        } catch (Exception e) {
+            status.complete(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return status.join();
     }
 
     @Override
