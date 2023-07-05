@@ -64,6 +64,11 @@ public class UtenteController {
         return utenteService.makeAdmin(id, jwt);
     }
 
+    @GetMapping("/users/banned")
+    public HttpStatus isBanned(@RequestParam String email) {
+        return utenteService.isBanned(email);
+    }
+
     @PatchMapping("/users/revokeAdmin/{idUser}")
     public HttpStatus revokeAdmin(@PathVariable("idUser") Long id, @RequestParam String jwt) {
         return utenteService.revokeAdmin(id, jwt);

@@ -3,6 +3,7 @@ package it.unical.inf.ea.trintedapp.data.service;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
@@ -48,7 +49,19 @@ public class UtenteServiceImpl implements UtenteService {
     }
 
     @Override
+    public HttpStatus isBanned(String email) {
+        Optional<UtenteBannato> utenteBannato = utenteBannatoDao.findByEmailBannata(email);
+        if (utenteBannato.isPresent()) {
+            return HttpStatus.FORBIDDEN;
+        }
+        return HttpStatus.OK;
+    }
+
+    @Override
     public UtenteRegistrationDto save(UtenteRegistrationDto utenteDto) {
+        if (isBanned(utenteDto.getCredenzialiEmail()) == HttpStatus.FORBIDDEN) {
+            throw new IllegalArgumentException("Utente bannato");
+        }
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
         utenteDto.setCredenzialiPassword(passwordEncoder.encode(utenteDto.getCredenzialiPassword()));
 

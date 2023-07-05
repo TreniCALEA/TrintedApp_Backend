@@ -41,4 +41,6 @@ public interface UtenteService {
 
     HttpStatus banUser(Long id, String jwt);
 
+    HttpStatus isBanned(String email);
+
 }
