@@ -20,7 +20,6 @@ public class UtenteBannato {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email_bannata")
+    @Column(name = "email_bannata", unique=true)
     private String emailBannata;
-
 }
