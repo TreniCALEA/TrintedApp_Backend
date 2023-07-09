@@ -314,8 +314,9 @@ public class UtenteServiceImpl implements UtenteService {
                         if (utenteDaBannare.getIsOwner())
                             res.complete(HttpStatus.UNAUTHORIZED);
                         else if (utente.getIsAdmin()) {
-
-                            utenteBannatoDao.save(modelMapper.map(utenteDao.findById(id).get(), UtenteBannato.class));
+                            UtenteBannato utenteBannato = new UtenteBannato();
+                            utenteBannato.setEmailBannata(utenteDaBannare.getCredenziali().getEmail());
+                            utenteBannatoDao.save(utenteBannato);
                             res.complete(HttpStatus.OK);
                         }
 
