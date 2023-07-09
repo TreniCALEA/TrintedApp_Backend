@@ -51,10 +51,8 @@ public class UtenteServiceImpl implements UtenteService {
     @Override
     public HttpStatus isBanned(String email) {
         Optional<UtenteBannato> utenteBannato = utenteBannatoDao.findByEmailBannata(email);
-        if (utenteBannato.isPresent()) {
-            return HttpStatus.FORBIDDEN;
-        }
-        return HttpStatus.OK;
+        if (utenteBannato.isPresent()) return HttpStatus.OK;
+        return HttpStatus.NOT_FOUND;
     }
 
     @Override
