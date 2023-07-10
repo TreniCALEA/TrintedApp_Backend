@@ -32,8 +32,4 @@ public class Recensione {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "autore")
     private Utente autore;
-
-    @OneToOne(mappedBy = "recensioneOrdine", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Ordine ordine;
-
 }

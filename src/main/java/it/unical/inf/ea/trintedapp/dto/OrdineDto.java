@@ -21,10 +21,13 @@ public class OrdineDto {
     @PastOrPresent
     private LocalDate dataAcquisto;
 
-    private Utente acquirente;
+    @NotNull
+    private Long acquirenteId;
     
-    private Utente venditore;
+    @NotNull
+    private Long venditoreId;
 
+    @NotNull
     private Indirizzo indirizzo;
     
 }

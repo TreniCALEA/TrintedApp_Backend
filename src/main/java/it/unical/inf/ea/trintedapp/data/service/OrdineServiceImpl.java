@@ -35,7 +35,7 @@ public class OrdineServiceImpl implements OrdineService {
     private final ArticoloDao articoloDao;
     private final UtenteDao utenteDao;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     @Override
     public void save(Ordine ordine) {
@@ -73,7 +73,7 @@ public class OrdineServiceImpl implements OrdineService {
                 new CoroutineCallback<>((response, error) -> {
                     Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
                     if (utente.getId() == id || utente.getIsAdmin()) {
-                        vendite.complete(ordineDao.findAllByAcquirente(id).stream()
+                        vendite.complete(ordineDao.findAllByAcquirenteId(id).stream()
                                 .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
                                 .collect(Collectors.toList()));
                     } else {
@@ -83,6 +83,7 @@ public class OrdineServiceImpl implements OrdineService {
             );
         } catch (Exception e) {
             vendite.completeExceptionally(e);
+            e.printStackTrace();
         }
 
         return vendite.join();
@@ -105,7 +106,7 @@ public class OrdineServiceImpl implements OrdineService {
                 new CoroutineCallback<>((response, error) -> {
                     Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
                     if (utente.getId() == id || utente.getIsAdmin()) {
-                        acquisti.complete(ordineDao.findAllByVenditore(id).stream()
+                        acquisti.complete(ordineDao.findAllByVenditoreId(id).stream()
                                 .map(ordine -> modelMapper.map(ordine, OrdineDto.class))
                                 .collect(Collectors.toList()));
                     } else {

@@ -14,9 +14,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrdineDao extends JpaRepository<Ordine, Long> {
 
-    Optional<Ordine> findAllByAcquirente(Long id);
+    List<Ordine> findAllByAcquirenteId(Long acquirenteId);
 
-    Optional<Ordine> findAllByVenditore(Long id);
+    List<Ordine> findAllByVenditoreId(Long venditoreId);
 
     List<Ordine> findAllByAcquirenteAndDataAcquistoBetween(Utente Acquirente, LocalDate from, LocalDate to);
 

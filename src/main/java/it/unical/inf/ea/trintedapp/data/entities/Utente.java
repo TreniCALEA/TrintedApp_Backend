@@ -54,11 +54,11 @@ public class Utente {
         private Indirizzo indirizzo;
 
         @JsonManagedReference
-        @OneToMany(mappedBy = "autore", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+        @OneToMany(mappedBy = "autore", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
         private List<Recensione> recensioniRicevute;
 
         @JsonManagedReference
-        @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+        @OneToMany(mappedBy = "utente", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
         private List<Articolo> articoli;
 
         @Embedded
@@ -72,8 +72,13 @@ public class Utente {
         @Column(name = "isAdmin")
         private Boolean isAdmin;
 
-        @OneToMany(mappedBy = "acquirente", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-        private List<Ordine> ordiniUtente;
+        @JsonManagedReference
+        @OneToMany(mappedBy = "acquirente", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+        private List<Ordine> ordiniAcquirente;
+
+        @JsonManagedReference
+        @OneToMany(mappedBy = "venditore", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+        private List<Ordine> ordiniVenditore;
 
         @Column(name = "isOwner")
         private Boolean isOwner;
