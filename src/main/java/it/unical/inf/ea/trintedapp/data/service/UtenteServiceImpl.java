@@ -201,13 +201,11 @@ public class UtenteServiceImpl implements UtenteService {
                     new CoroutineCallback<>((response, error) -> {
                         Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
                         if (utente.getId() == id) {
-                            if (utente.getNome().isEmpty() || utente.getNome() == null)
-                                utente.setNome(utenteCompletionDto.getNome());
+                            if (!utenteCompletionDto.getNome().isEmpty()) utente.setNome(utenteCompletionDto.getNome());
 
-                            if (utente.getCognome().isEmpty() || utente.getCognome() == null)
-                                utente.setCognome(utenteCompletionDto.getCognome());
+                            if (!utenteCompletionDto.getCognome().isEmpty()) utente.setCognome(utenteCompletionDto.getCognome());
 
-                            if (utenteCompletionDto.getImmagine() == null)
+                            if (utenteCompletionDto.getImmagine() == null && utente.getImmagine() == null)
                                 utente.setImmagine(pfpImg);
                             else
                                 utente.setImmagine(utenteCompletionDto.getImmagine());
