@@ -51,7 +51,8 @@ public class UtenteServiceImpl implements UtenteService {
     @Override
     public HttpStatus isBanned(String email) {
         Optional<UtenteBannato> utenteBannato = utenteBannatoDao.findByEmailBannata(email);
-        if (utenteBannato.isPresent()) return HttpStatus.OK;
+        if (utenteBannato.isPresent())
+            return HttpStatus.OK;
         return HttpStatus.NOT_FOUND;
     }
 
@@ -200,18 +201,18 @@ public class UtenteServiceImpl implements UtenteService {
                     new CoroutineCallback<>((response, error) -> {
                         Utente utente = utenteDao.findByCredenzialiEmail(response.getEmail()).get();
                         if (utente.getId() == id) {
-                            utente.setNome(
-                                    utenteCompletionDto.getNome().isEmpty() ? null : utenteCompletionDto.getNome());
+                            if (utente.getNome().isEmpty() || utente.getNome() == null)
+                                utente.setNome(utenteCompletionDto.getNome());
 
-                            utente.setCognome(utenteCompletionDto.getCognome().isEmpty() ? null
-                                    : utenteCompletionDto.getCognome());
+                            if (utente.getCognome().isEmpty() || utente.getCognome() == null)
+                                utente.setCognome(utenteCompletionDto.getCognome());
 
                             if (utenteCompletionDto.getImmagine() == null)
                                 utente.setImmagine(pfpImg);
                             else
                                 utente.setImmagine(utenteCompletionDto.getImmagine());
 
-                            if (utenteCompletionDto.getIndirizzo() != null)
+                            if (utenteCompletionDto.getIndirizzo() != null && utente.getIndirizzo() == null)
                                 utente.setIndirizzo(utenteCompletionDto.getIndirizzo());
                             else
                                 utente.setIndirizzo(null);
